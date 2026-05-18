@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="陈能军 | 产品经理个人作品集，2年AI驱动工具链与复杂系统产品0-1全流程经验，主导通信设计、架构设计、通信仿真等平台。">
+    <meta name="keywords" content="产品经理,陈能军,AI产品,产品经理简历,产品作品集">
+    <meta property="og:title" content="陈能军 | 产品经理">
+    <meta property="og:description" content="AI时代持续探索的人 · 产品经理个人作品集">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_CN">
+    <title>陈能军 | 产品经理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary-dark: #0A2463;
+            --primary-light: #3E64AF;
+            --bg-warm: #FAF8F5;
+            --text-dark: #1D2B3A;
+            --text-light: #5A6C7D;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            background-color: #FFFFFF;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* 顶部导航 */
+        header {
+            background: #FFFFFF;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-light);
+        }
+
+        .btn-talk {
+            background: var(--primary-dark);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-talk:hover {
+            background: #081d4f;
+        }
+
+        /* 头部区域 */
+        .hero {
+            background-color: var(--bg-warm);
+            padding: 100px 0;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .hero-text .highlight {
+            color: var(--primary-light);
+        }
+
+        /* 核心标签组样式 */
+        .hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .hero-tag {
+            padding: 8px 16px;
+            background: rgba(62, 100, 175, 0.12);
+            color: var(--primary-light);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .hero-tag:hover {
+            background: rgba(62, 100, 175, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .hero-text p {
+            font-size: 17px;
+            color: var(--text-light);
+            max-width: 500px;
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .btn-primary {
+            background: var(--primary-dark);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: #081d4f;
+        }
+
+        /* 头像 */
+        .hero-image {
+            width: 100%;
+            aspect-ratio: 1 / 1.2;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 个人信息模块 */
+        .profile {
+            padding: 60px 0;
+            background: #fff;
+        }
+
+        .profile-card {
+            background: var(--bg-warm);
+            padding: 40px;
+            border-radius: 4px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--primary-dark);
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .profile-info strong {
+            color: var(--primary-dark);
+        }
+
+        /* 通用区块标题 */
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 40px;
+        }
+
+        /* 工作经历（独立板块） */
+        .experience {
+            padding: 100px 0;
+        }
+
+        .exp-item {
+            background: #fff;
+            padding: 36px;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        /* 带公司照片的工作经历卡片 */
+        .exp-item-featured {
+            background: #fff;
+            padding: 0;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .exp-company-img {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #F1F5F9;
+        }
+
+        .exp-company-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            min-height: 240px;
+        }
+
+        .exp-item-featured .exp-text {
+            padding: 36px;
+        }
+
+        .exp-time {
+            display: inline-block;
+            background: rgba(62, 100, 175, 0.1);
+            color: var(--primary-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .exp-item h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .exp-company {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .exp-desc {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        /* 项目经历（独立板块：职场实战项目+配图，文字介绍） */
+        .project-exp {
+            padding: 100px 0;
+            background: #FAFBFC;
+        }
+
+        .proj-exp-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+
+        .proj-exp-item:nth-child(even) {
+            direction: rtl;
+        }
+
+        .proj-exp-item:nth-child(even) .proj-exp-text {
+            direction: ltr;
+        }
+
+        .proj-exp-img {
+            background: #F1F5F9;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .proj-exp-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .proj-exp-text h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-dark);
+        }
+
+        .proj-exp-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .proj-highlights {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .proj-highlights li {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dark);
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .proj-highlights li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary-light);
+        }
+
+        /* 个人作品集（独立板块：与职场项目完全无关，纯个人独立作品） */
+        .personal-works {
+            padding: 100px 0;
+        }
+
+        .works-subsection {
+            margin-bottom: 64px;
+        }
+
+        .works-subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .works-subheading {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 32px;
+            padding-left: 14px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .work-card {
+            background: white;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .work-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .work-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-bottom: 24px;
+            overflow: hidden;
+            border-radius: 4px;
+            background: #F1F5F9;
+        }
+
+        .work-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .work-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .work-card p {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .work-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-dark);
+            color: var(--primary-dark);
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-mockplus {
+            border: 1px solid #2D5AF0;
+            color: #2D5AF0;
+            background: rgba(45, 90, 240, 0.04);
+            padding: 10px 20px;
+            border-radius: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-mockplus:hover {
+            background: #2D5AF0;
+            color: white;
+        }
+
+        .prototype-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .prototype-card {
+            background: white;
+            padding: 28px;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .prototype-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .prototype-num {
+            display: inline-block;
+            background: rgba(62, 100, 175, 0.1);
+            color: var(--primary-light);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .prototype-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .prototype-card p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .template-download {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .template-download h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .template-download p {
+            font-size: 15px;
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+
+        /* 简历下载 */
+        .resume {
+            padding: 100px 0;
+            text-align: center;
+            background: #FAFBFC;
+        }
+
+        .resume-card {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 48px;
+            box-shadow: var(--card-shadow);
+            border-radius: 4px;
+        }
+
+        .resume-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .resume-card p {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 32px;
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* 汉堡菜单按钮 - 桌面端隐藏 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 200;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-dark);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                flex-direction: column;
+                background: #FFFFFF;
+                padding: 80px 32px 32px;
+                gap: 24px;
+                box-shadow: -4px 0 20px rgba(0,0,0,0.08);
+                transition: right 0.3s ease;
+                z-index: 150;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                padding: 8px 0;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero {
+                padding: 60px 0;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .hero-text h1 {
+                font-size: 36px;
+            }
+
+            .hero-image {
+                max-width: 260px;
+                margin: 0 auto;
+            }
+
+            .profile-info {
+                grid-template-columns: 1fr;
+            }
+
+            .proj-exp-item {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .proj-exp-item:nth-child(even) {
+                direction: ltr;
+            }
+
+            .proj-exp-img {
+                aspect-ratio: 16 / 10;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .prototype-list {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .works-subheading {
+                font-size: 16px;
+            }
+
+            .exp-item h3 {
+                font-size: 20px;
+            }
+
+            .exp-item-featured {
+                grid-template-columns: 180px 1fr;
+            }
+
+            .exp-item-featured .exp-text {
+                padding: 24px;
+            }
+
+            .exp-company-img img {
+                min-height: 180px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 28px;
+            }
+
+            .resume-card {
+                padding: 32px 24px;
+            }
+
+            .resume-card h3 {
+                font-size: 24px;
+            }
+
+            .hero-tags {
+                gap: 8px;
+            }
+
+            .hero-tag {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .hero-text p {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 28px;
+            }
+
+            .profile-card {
+                padding: 24px;
+            }
+
+            .exp-item {
+                padding: 24px;
+            }
+
+            .exp-item-featured {
+                grid-template-columns: 1fr;
+            }
+
+            .exp-item-featured .exp-text {
+                padding: 20px;
+            }
+
+            .exp-company-img img {
+                min-height: 160px;
+                max-height: 200px;
+            }
+
+            .work-card {
+                padding: 20px;
+            }
+
+            .proj-exp-text h3 {
+                font-size: 20px;
+            }
+
+            .btn-primary {
+                padding: 12px 24px;
+                font-size: 13px;
+            }
+        }
+
+        /* 滚动渐入动画 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header>
+        <div class="container nav">
+            <a href="#" class="nav-brand">陈能军 · 产品经理</a>
+            <button class="hamburger" id="hamburger" aria-label="菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="#profile">个人信息</a>
+                <a href="#experience">工作经历</a>
+                <a href="#project-exp">项目经历</a>
+                <a href="#personal-works">个人作品集</a>
+                <a href="#resume">简历下载</a>
+                <a href="#contact">联系我</a>
+                <a href="mailto:1085497535@qq.com?subject=你好陈能军，我对你的作品集感兴趣" class="btn-talk">立即联系</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 头部区域（已新增核心标签） -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>
+                    陈能军<br>
+                    <span class="highlight">AI时代持续探索的人</span>
+                </h1>
+                <!-- 新增核心标签组 -->
+                <div class="hero-tags">
+                    <span class="hero-tag">AI产品</span>
+                    <span class="hero-tag">云平台</span>
+                    <span class="hero-tag">主机厂</span>
+                    <span class="hero-tag">军工</span>
+                    <span class="hero-tag">Vibe Coding</span>
+                </div>
+                <p>
+                    2年产品经验，主导AI工具链与复杂系统产品0-1全流程落地，擅长需求分析、产品规划、跨部门协作与客户交付，具备多行业产品设计与落地能力。
+                </p>
+                <a href="#personal-works" class="btn-primary">查看个人作品</a>
+            </div>
+            <!-- 个人头像 -->
+            <div class="hero-image">
+                <img src="images/avatar.jpg" alt="陈能军个人头像">
+            </div>
+        </div>
+    </section>
+
+    <!-- 个人信息模块 -->
+    <section class="profile" id="profile">
+        <div class="container">
+            <div class="profile-card">
+                <h2 class="profile-title">个人基础信息</h2>
+                <div class="profile-info">
+                    <div><strong>姓名：</strong>陈能军</div>
+                    <div><strong>年龄：</strong>24岁</div>
+                    <div><strong>身高：</strong>179cm</div>
+                    <div><strong>籍贯：</strong>四川泸州</div>
+                    <div><strong>性别：</strong>男</div>
+                    <div><strong>民族：</strong>汉</div>
+                    <div><strong>工作年限：</strong>2年</div>
+                    <div><strong>求职岗位：</strong>产品经理</div>
+                    <div><strong>联系电话：</strong>17715706103</div>
+                    <div><strong>邮箱：</strong>1085497535@qq.com</div>
+                    <div><strong>学历：</strong>西华大学 物联网工程（本科）</div>
+                    <div><strong>在校时间：</strong>2021.09-2025.07</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作经历（独立板块） -->
+    <section class="experience" id="experience">
+        <div class="container">
+            <h2 class="section-title">工作经历</h2>
+            <!-- 中科院工作经历（带公司照片） -->
+            <div class="exp-item-featured reveal">
+                <div class="exp-company-img">
+                    <img src="images/company-bs.jpg" alt="国科础石">
+                </div>
+                <div class="exp-text">
+                    <div class="exp-time">2024.06 - 至今</div>
+                    <h3>产品经理</h3>
+                    <div class="exp-company">中国科学院重庆科学中心（国科础石）</div>
+                    <p class="exp-desc">参与面向东风、奇瑞、长安、一汽、上汽等大型主机厂，及601、602研究所、中航工业等军工单位的AI驱动工具链与系统产品，对接核心客户需求，保障产品贴合业务场景；主导核心产品全流程管理，参与产品AI功能设计落地，承担售前支持与项目交付工作。</p>
+                </div>
+            </div>
+            <!-- 实习工作经历（带项目架构图） -->
+            <div class="exp-item-featured reveal">
+                <div class="exp-company-img">
+                    <img src="images/platform-jg.jpeg" alt="监管一体化平台功能架构图">
+                </div>
+                <div class="exp-text">
+                    <div class="exp-time">2022.06 - 2022.09</div>
+                    <h3>产品助理（实习）</h3>
+                    <div class="exp-company">四川积数科技有限公司</div>
+                    <p class="exp-desc">参与市场监管一体化平台的迭代优化工作，负责需求分析、PRD撰写、原型设计；配合完成核心模块功能落地与竞标材料准备，支撑平台迭代与项目竞标。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目经历（独立板块：职场实战项目+配图，与作品集无关） -->
+    <section class="project-exp" id="project-exp">
+        <div class="container">
+            <h2 class="section-title">项目经历</h2>
+            <!-- 通信设计平台 -->
+            <div class="proj-exp-item reveal">
+                <div class="proj-exp-img">
+                    <img src="images/project-comm.png" alt="通信设计平台">
+                </div>
+                <div class="proj-exp-text">
+                    <h3>通信设计平台</h3>
+                    <p>主导平台0-1全流程落地，全程负责需求调研、产品规划、研发推进及客户交付，核心服务东风、长安、奇瑞等头部主机厂与601、611等军工研究所。</p>
+                    <p>负责平台CAN、SOME/IP、DDS及自定义通信协议设计功能开发，产品设计严格贴合AUTOSAR CP/AP规范与主机厂V模式开发流程，深度融入AI自动改错、智能校验、合规检测核心功能。</p>
+                </div>
+            </div>
+            <!-- 工程师Agent平台 -->
+            <div class="proj-exp-item reveal">
+                <div class="proj-exp-img">
+                    <img src="images/project-agent.jpeg" alt="工程师Agent平台">
+                </div>
+                <div class="proj-exp-text">
+                    <h3>工程师 Agent 平台</h3>
+                    <p>主导平台 0-1 全流程落地，全程负责需求调研、产品规划、研发推进及客户交付。</p>
+                    <ul class="proj-highlights">
+                        <li>负责平台核心设计功能开发，产品设计贴合行业规范与主机厂开发流程。</li>
+                        <li>主导 AI 智能助手能力设计，落地智能校验、异常归因、变更影响分析等核心功能，有效提升设计准确性与工作效率。</li>
+                        <li>参与售前方案撰写、客户需求对接及项目验收交付全流程，保障重点项目顺利落地。</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 协同架构设计平台 -->
+            <div class="proj-exp-item reveal">
+                <div class="proj-exp-img">
+                    <img src="images/project-arch.png" alt="协同架构设计平台">
+                </div>
+                <div class="proj-exp-text">
+                    <h3>协同架构设计平台</h3>
+                    <p>主导平台0-1完整建设，涵盖架构建模、内置知识库、轻量化项目管理等核心模块，服务车载电子与军工装备研发场景。</p>
+                    <p>结合AUTOSAR架构思想与主机厂标准研发流程设计产品，集成AI智能问答、架构辅助检查、测试数据自动生成智能化功能，负责客户全流程对接与需求落地转化。</p>
+                </div>
+            </div>
+            <!-- 通信仿真平台 -->
+            <div class="proj-exp-item reveal">
+                <div class="proj-exp-img">
+                    <img src="images/project-sim.png" alt="通信仿真平台">
+                </div>
+                <div class="proj-exp-text">
+                    <h3>通信仿真平台</h3>
+                    <p>独立负责平台0-1产品设计，规划并落地全链路通信仿真、时序模拟、数据注入等核心功能，适配车载网络与军工装备场景需求。</p>
+                    <p>依据AUTOSAR规范与V模式开发流程搭建仿真验证体系，搭建AI数据分析模块，实现仿真日志智能解析、异常自动识别，快速定位仿真过程中的问题。</p>
+                </div>
+            </div>
+            <!-- 校园外卖平台 -->
+            <div class="proj-exp-item reveal">
+                <div class="proj-exp-img">
+                    <img src="images/project-food.png" alt="校园外卖平台">
+                </div>
+                <div class="proj-exp-text">
+                    <h3>校园外卖平台</h3>
+                    <p>独立负责校园外卖平台0-1产品设计与落地，梳理并搭建用户端下单、商家端管理、订单处理等核心功能流程。</p>
+                    <p>完成产品需求梳理、页面交互设计与整体功能规划，结合校园实际使用场景优化流程，统筹平台上线后的运维与问题处理。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 个人作品集 -->
+    <section class="personal-works" id="personal-works">
+        <div class="container">
+            <h2 class="section-title">个人作品集</h2>
+
+            <!-- Vibe Coding 作品 -->
+            <div class="works-subsection">
+                <h3 class="works-subheading">Vibe Coding 作品 & 可交互原型</h3>
+                <div class="work-grid">
+                    <!-- 个人网站 -->
+                    <div class="work-card reveal">
+                        <h3>个人网站</h3>
+                        <p>基于 AI 辅助从零搭建的产品经理个人作品集网站，展示工作经历、项目经验与个人作品，响应式设计适配多端访问。</p>
+                        <div class="work-buttons">
+                            <a href="/" class="btn-outline">在线访问</a>
+                        </div>
+                    </div>
+                    <!-- 通信Agent平台 -->
+                    <div class="work-card reveal">
+                        <h3>通信 Agent 平台</h3>
+                        <p>工程师智能助手交互原型，支持通信协议设计、智能校验与异常归因，可在浏览器中直接运行体验。</p>
+                        <div class="work-buttons">
+                            <a href="files/通信agent平台.html" download class="btn-outline">HTML下载</a>
+                        </div>
+                    </div>
+                    <!-- 待办事项小应用 -->
+                    <div class="work-card reveal">
+                        <div class="work-img">
+                            <img src="images/work-todo.png" alt="待办事项小应用">
+                        </div>
+                        <h3>待办事项小应用</h3>
+                        <p>极简待办管理工具，支持任务添加、状态标记与分类筛选，纯前端实现无需后端服务。</p>
+                    </div>
+                    <!-- 机器学习算法调优平台 -->
+                    <div class="work-card reveal">
+                        <div class="work-img">
+                            <img src="images/work-algo.png" alt="机器学习算法调优平台">
+                        </div>
+                        <h3>机器学习算法调优平台</h3>
+                        <p>交互式机器学习参数调优可视化工具，支持算法对比与超参数调整，直观展示模型效果变化。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 原型设计 -->
+            <div class="works-subsection">
+                <h3 class="works-subheading">原型设计</h3>
+                <div class="prototype-list">
+                    <div class="prototype-card reveal">
+                        <span class="prototype-num">原型 1</span>
+                        <h3>产品原型方案一</h3>
+                        <p>基于墨刀制作的交互原型，覆盖核心用户流程与界面设计。</p>
+                        <a href="#" target="_blank" class="btn-mockplus">在墨刀中查看</a>
+                    </div>
+                    <div class="prototype-card reveal">
+                        <span class="prototype-num">原型 2</span>
+                        <h3>产品原型方案二</h3>
+                        <p>基于墨刀制作的交互原型，覆盖核心用户流程与界面设计。</p>
+                        <a href="#" target="_blank" class="btn-mockplus">在墨刀中查看</a>
+                    </div>
+                    <div class="prototype-card reveal">
+                        <span class="prototype-num">原型 3</span>
+                        <h3>产品原型方案三</h3>
+                        <p>基于墨刀制作的交互原型，覆盖核心用户流程与界面设计。</p>
+                        <a href="#" target="_blank" class="btn-mockplus">在墨刀中查看</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通用需求文档模版 -->
+            <div class="works-subsection">
+                <h3 class="works-subheading">通用需求文档模版</h3>
+                <div class="template-download reveal">
+                    <h3>产品经理需求文档通用模版</h3>
+                    <p>个人整理的标准需求文档、原型、流程图模版，适用于全行业产品设计，可直接下载使用。</p>
+                    <div class="work-buttons" style="justify-content: center;">
+                        <a href="files/需求文档模版.pdf" target="_blank" class="btn-outline">在线预览</a>
+                        <a href="files/需求文档模版.pdf" download class="btn-primary">模版下载（PDF）</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 简历下载 -->
+    <section class="resume" id="resume">
+        <div class="container">
+            <div class="resume-card">
+                <h3>个人简历</h3>
+                <p>包含完整工作经历、项目经验、核心优势与作品集说明，可直接用于面试投递。</p>
+                <div class="work-buttons" style="justify-content: center;">
+                    <a href="files/陈能军-产品经理-简历.pdf" target="_blank" class="btn-outline">在线预览</a>
+                    <a href="files/陈能军-产品经理-简历.pdf" download class="btn-primary">下载PDF</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <p>© 2025 陈能军 | 产品经理个人作品集 | 电话：<a href="tel:17715706103" style="color:inherit;">17715706103</a> | 邮箱：<a href="mailto:1085497535@qq.com" style="color:inherit;">1085497535@qq.com</a></p>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
