@@ -1,393 +1,1811 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoEvolve EE｜最终版完整产品原型</title>
-  <style>
-    :root {
-      --bg: #f4f7fb;
-      --surface: #ffffff;
-      --surface-2: #f8fbff;
-      --ink: #162033;
-      --muted: #6d7890;
-      --line: #e2eaf4;
-      --line-2: #d2ddec;
-      --blue: #2357d6;
-      --blue-2: #123fae;
-      --blue-soft: #edf3ff;
-      --green: #14966a;
-      --green-soft: #eaf8f2;
-      --amber: #c97913;
-      --amber-soft: #fff5df;
-      --red: #d73d3d;
-      --red-soft: #fff0f0;
-      --purple: #7355d6;
-      --purple-soft: #f3efff;
-      --cyan: #0b829d;
-      --cyan-soft: #e8f8fb;
-      --navy: #0f1b31;
-      --shadow: 0 18px 50px rgba(22, 34, 62, .09);
-      --shadow-soft: 0 8px 24px rgba(22, 34, 62, .07);
-      --radius-xl: 22px;
-      --radius: 16px;
-      --radius-sm: 12px;
-      --top-h: 64px;
-      --side-w: 252px;
-      --right-w: 360px;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-      color: var(--ink);
-      background: radial-gradient(circle at top left, #eaf1ff 0, #f4f7fb 36%, #f8fafc 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
-    }
-    button, input, select, textarea { font: inherit; }
-
-    .app { height: 100vh; display: grid; grid-template-rows: var(--top-h) 1fr; min-width: 1220px; }
-    .topbar {
-      height: var(--top-h);
-      background: rgba(255,255,255,.93);
-      border-bottom: 1px solid rgba(224,232,245,.96);
-      backdrop-filter: blur(14px);
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 18px;
-      padding: 0 18px;
-      z-index: 20;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 200px; }
-    .logo {
-      width: 34px; height: 34px; border-radius: 12px;
-      background: linear-gradient(145deg, #183b85, #2357d6);
-      color: #fff; display: flex; align-items: center; justify-content: center;
-      font-weight: 900; box-shadow: 0 8px 18px rgba(35,87,214,.25);
-    }
-    .brand h1 { margin: 0; font-size: 15px; line-height: 1.1; }
-    .brand span { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
-    .context-bar { display: flex; align-items: center; gap: 8px; min-width: 0; }
-    .ctx {
-      height: 36px; border: 1px solid var(--line); background: var(--surface-2);
-      border-radius: 999px; padding: 0 11px; display: flex; align-items: center; gap: 7px;
-      color: #3f4b61; font-size: 12px; white-space: nowrap; cursor: pointer;
-    }
-    .ctx b { color: var(--ink); font-weight: 720; }
-    .global-search {
-      flex: 1; max-width: 460px; min-width: 250px; height: 38px;
-      border: 1px solid var(--line); border-radius: 999px; background: #fff;
-      display: flex; align-items: center; gap: 8px; padding: 0 13px;
-      color: var(--muted); font-size: 12px;
-    }
-    .global-search input { border: 0; outline: 0; flex: 1; min-width: 0; background: transparent; color: var(--ink); }
-    .top-actions { display: flex; align-items: center; gap: 8px; }
-    .icon-btn {
-      width: 36px; height: 36px; border-radius: 12px; border: 1px solid var(--line);
-      background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer;
-      color: #49566d; position: relative; transition: .16s ease;
-    }
-    .icon-btn:hover { box-shadow: var(--shadow-soft); transform: translateY(-1px); }
-    .badge-dot { position: absolute; top: 7px; right: 7px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid #fff; }
-    .user-mini {
-      height: 38px; border: 1px solid var(--line); background: #fff; border-radius: 999px;
-      display: flex; align-items: center; gap: 9px; padding: 3px 9px 3px 4px; cursor: pointer;
-    }
-    .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
-    .user-mini span { font-size: 12px; color: #3c475b; }
-
-    .layout { min-height: 0; display: grid; grid-template-columns: var(--side-w) minmax(0,1fr); padding: 14px; gap: 14px; overflow: hidden; }
-    .sidebar { min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 12px; }
-    .role-summary { background: linear-gradient(145deg, #101a30 0%, #142a56 100%); color: #fff; border-radius: var(--radius-xl); padding: 16px; box-shadow: var(--shadow); }
-    .role-summary .role { font-size: 12px; color: #bcd0ef; margin-bottom: 7px; }
-    .role-summary h2 { font-size: 18px; margin: 0; line-height: 1.25; }
-    .role-summary p { margin: 8px 0 0; font-size: 12px; line-height: 1.55; color: #c8d5e9; }
-    .role-summary .mini-switch { margin-top: 12px; display: flex; gap: 7px; flex-wrap: wrap; }
-
-    .panel, .card {
-      border: 1px solid rgba(224,232,245,.95); background: rgba(255,255,255,.96);
-      border-radius: var(--radius-xl); box-shadow: var(--shadow-soft); overflow: hidden;
-    }
-    .card { padding: 15px; }
-    .card.flat { box-shadow: none; background: #fff; border-radius: var(--radius); }
-    .nav-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-    .nav-head { padding: 13px 14px 9px; border-bottom: 1px solid var(--line); }
-    .nav-head h3 { margin: 0; font-size: 14px; }
-    .nav-head p { margin: 4px 0 0; font-size: 11px; color: var(--muted); line-height: 1.4; }
-    .nav-list { padding: 9px; overflow: auto; }
-    .nav-group-title { margin: 10px 7px 6px; font-size: 11px; color: #8590a4; }
-    .nav-btn {
-      width: 100%; border: 0; background: transparent; border-radius: 13px;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 10px; color: #445066; font-size: 13px; cursor: pointer; transition: .16s ease; margin-bottom: 4px; text-align: left;
-    }
-    .nav-btn:hover { background: #f3f6fb; }
-    .nav-btn.active { background: var(--blue-soft); color: var(--blue); font-weight: 750; }
-    .nav-btn .left { display: flex; align-items: center; gap: 9px; }
-    .nav-icon { width: 22px; height: 22px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #f1f5fa; color: #647188; font-size: 12px; }
-    .nav-btn.active .nav-icon { background: #dce7ff; color: var(--blue); }
-    .nav-count { font-size: 11px; color: var(--muted); }
-
-    .main { min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 12px; }
-    .page-head {
-      background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: var(--radius-xl); box-shadow: var(--shadow-soft);
-      padding: 15px 16px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
-    }
-    .crumb { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
-    .page-title { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -.2px; }
-    .page-sub { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
-    .page-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-    .content { min-height: 0; overflow: auto; padding-right: 2px; }
-    .page { display: none; }
-    .page.active { display: block; animation: fade .18s ease; }
-    @keyframes fade { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: translateY(0); } }
-
-    .grid { display: grid; gap: 12px; }
-    .grid-2 { grid-template-columns: repeat(2,minmax(0,1fr)); }
-    .grid-3 { grid-template-columns: repeat(3,minmax(0,1fr)); }
-    .grid-4 { grid-template-columns: repeat(4,minmax(0,1fr)); }
-    .split { display: grid; grid-template-columns: minmax(0,1fr) var(--right-w); gap: 12px; }
-    .split-wide { display: grid; grid-template-columns: 320px minmax(0,1fr); gap: 12px; }
-    .three-col { display: grid; grid-template-columns: 300px minmax(0,1fr) 360px; gap: 12px; }
-
-    .card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
-    .card h3 { margin: 0; font-size: 15px; line-height: 1.35; }
-    .card h4 { margin: 0; font-size: 13px; line-height: 1.35; }
-    .card p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
-    .metric { min-height: 112px; display: flex; flex-direction: column; justify-content: space-between; }
-    .metric .label { color: var(--muted); font-size: 12px; }
-    .metric .value { font-size: 28px; font-weight: 850; letter-spacing: -.5px; }
-    .metric .foot { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-
-    .tag { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 5px 8px; font-size: 11px; line-height: 1; background: #f1f5fa; color: #526075; border: 1px solid var(--line); white-space: nowrap; }
-    .tag.blue { background: var(--blue-soft); color: var(--blue); border-color: #cfdcff; }
-    .tag.green { background: var(--green-soft); color: var(--green); border-color: #b9e7d2; }
-    .tag.amber { background: var(--amber-soft); color: #a66204; border-color: #efd29b; }
-    .tag.red { background: var(--red-soft); color: var(--red); border-color: #ffc8c8; }
-    .tag.purple { background: var(--purple-soft); color: var(--purple); border-color: #ded3ff; }
-    .tag.cyan { background: var(--cyan-soft); color: var(--cyan); border-color: #b9e7ef; }
-    .tag.dark { background: rgba(255,255,255,.1); color: #e8eefb; border-color: rgba(255,255,255,.18); }
-
-    .btn { border: 1px solid var(--line-2); background: #fff; color: var(--ink); border-radius: 12px; padding: 9px 11px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer; transition: .16s ease; font-size: 12px; white-space: nowrap; }
-    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-soft); }
-    .btn.blue { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .btn.blue:hover { background: var(--blue-2); }
-    .btn.red { background: var(--red-soft); color: var(--red); border-color: #ffc8c8; }
-    .btn.ghost { background: transparent; box-shadow: none; }
-    .btn.small { padding: 6px 8px; border-radius: 10px; font-size: 11px; }
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 10px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface-2); margin-bottom: 12px; }
-    .toolbar input, .toolbar select { height: 34px; border: 1px solid var(--line-2); border-radius: 11px; padding: 0 10px; background: #fff; font-size: 12px; color: var(--ink); outline: none; }
-    .toolbar input { min-width: 220px; }
-
-    .work-item { border: 1px solid var(--line); border-radius: 17px; background: #fff; padding: 13px; margin-bottom: 10px; transition: .16s ease; cursor: pointer; }
-    .work-item:hover { transform: translateY(-1px); border-color: #c5d3e7; box-shadow: var(--shadow-soft); }
-    .work-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .work-title { margin: 0; font-size: 13px; line-height: 1.35; }
-    .work-desc { margin: 6px 0 10px; color: var(--muted); font-size: 12px; line-height: 1.45; }
-    .work-meta { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-    th { color: #5d687a; background: #f8fbff; font-weight: 750; position: sticky; top: 0; z-index: 1; }
-    tr:hover td { background: #fbfdff; }
-    .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
-
-    .flow-track { display: flex; gap: 7px; overflow-x: auto; padding: 2px 0; }
-    .step { display: flex; align-items: center; gap: 7px; min-width: 118px; font-size: 12px; color: var(--muted); white-space: nowrap; }
-    .step::after { content:""; height: 1px; background: var(--line-2); flex: 1; min-width: 18px; }
-    .step:last-child::after { display:none; }
-    .step-dot { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line-2); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; flex: 0 0 auto; }
-    .step.done { color: var(--green); }
-    .step.done .step-dot { background: var(--green); color: #fff; border-color: var(--green); }
-    .step.active { color: var(--blue); font-weight: 750; }
-    .step.active .step-dot { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 0 0 5px var(--blue-soft); }
-    .step.blocked { color: var(--red); font-weight: 750; }
-    .step.blocked .step-dot { background: var(--red); color: #fff; border-color: var(--red); box-shadow: 0 0 0 5px var(--red-soft); }
-
-    .graph { overflow: auto; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(180deg,#fff 0%,#f8fbff 100%); }
-    .graph-grid { display: grid; grid-template-columns: repeat(6,minmax(130px,1fr)); gap: 10px; min-width: 870px; }
-    .graph-col { display: flex; flex-direction: column; gap: 9px; }
-    .graph-title { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 2px; }
-    .node { border: 1px solid var(--line); border-radius: 15px; padding: 11px; min-height: 92px; background: #fff; cursor: pointer; position: relative; transition: .16s ease; }
-    .node:hover { transform: translateY(-1px); border-color: #b7c6df; box-shadow: var(--shadow-soft); }
-    .node::before { content:""; position: absolute; right: 10px; top: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
-    .node h5 { margin: 0 0 6px; font-size: 12px; }
-    .node p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
-    .node.ok { background:#f3fbf7; border-color:#aee0c9; }
-    .node.ok::before { background:var(--green); }
-    .node.warn { background:#fff9ee; border-color:#efcc86; }
-    .node.warn::before { background:var(--amber); }
-    .node.bad { background:#fff4f4; border-color:#ffb9b9; }
-    .node.bad::before { background:var(--red); }
-    .node.ai { background:#f5f7ff; border-color:#bdccff; }
-    .node.ai::before { background:var(--blue); }
-
-    .agent-box { border: 1px solid #1f2c45; background: linear-gradient(180deg,#101827,#111f36); color: #e5e7eb; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow); }
-    .agent-head { padding: 14px 15px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-    .agent-head h3 { margin: 0; font-size: 15px; }
-    .agent-head p { margin: 5px 0 0; color: #9ca9bf; font-size: 12px; line-height: 1.45; }
-    .agent-body { padding: 13px; display: flex; flex-direction: column; gap: 10px; }
-    .agent-step { display: grid; grid-template-columns: 24px 1fr auto; gap: 9px; align-items: start; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
-    .agent-step:last-child { border-bottom: 0; }
-    .agent-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #24314d; border: 1px solid #344363; color: #93c5fd; font-size: 10px; font-weight: 800; }
-    .agent-step.done .agent-dot { background:#065f46; border-color:#047857; color:#a7f3d0; }
-    .agent-step.active .agent-dot { background:#1d4ed8; border-color:#3b82f6; color:#bfdbfe; }
-    .agent-step.block .agent-dot { background:#7f1d1d; border-color:#dc2626; color:#fecaca; }
-    .agent-step b { display:block; color:#e5e7eb; font-size:12px; }
-    .agent-step span { display:block; color:#9ca3af; margin-top:3px; font-size:11px; line-height:1.4; }
-
-    .evidence-list { display: flex; flex-direction: column; gap: 8px; }
-    .evidence-card { display: grid; grid-template-columns: 28px 1fr; gap: 10px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-2); padding: 10px; }
-    .ev-num { width: 26px; height: 26px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--blue-soft); color: var(--blue); font-weight: 850; font-size: 11px; }
-    .evidence-card h4 { margin: 0 0 4px; font-size: 12px; }
-    .evidence-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
-
-    .form { display:grid; gap:10px; }
-    label { display:grid; gap:6px; color:#445066; font-weight:720; font-size:12px; }
-    input, select, textarea { width:100%; border:1px solid var(--line-2); border-radius:13px; padding:10px 11px; background:#fff; color:var(--ink); outline:none; }
-    textarea { min-height:96px; resize:vertical; }
-    input:focus, select:focus, textarea:focus { border-color:#98adf6; box-shadow:0 0 0 3px rgba(35,87,214,.12); }
-
-    .tabs { display:flex; gap:7px; padding:5px; background:#edf2f8; border-radius:999px; width:max-content; margin-bottom: 12px; }
-    .tab { border:0; background:transparent; border-radius:999px; padding:7px 10px; font-size:12px; color:#647188; cursor:pointer; }
-    .tab.active { background:#fff; color:var(--blue); box-shadow:var(--shadow-soft); font-weight:750; }
-
-    .comment-box { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: var(--surface-2); }
-    .comment { border-bottom: 1px solid var(--line); padding: 10px 0; }
-    .comment:last-child { border-bottom: 0; }
-    .comment b { font-size: 12px; }
-    .comment p { margin: 4px 0 0; font-size: 12px; color: var(--muted); line-height: 1.45; }
-
-    .modal-backdrop { position: fixed; inset:0; background:rgba(15,23,42,.38); display:none; align-items:center; justify-content:center; padding:20px; z-index:1000; }
-    .modal-backdrop.show { display:flex; }
-    .modal { width:min(920px,100%); max-height:86vh; overflow:auto; background:#fff; border-radius:24px; box-shadow:0 30px 100px rgba(15,23,42,.32); border:1px solid var(--line); }
-    .modal-head { padding:16px 18px; display:flex; justify-content:space-between; gap:10px; border-bottom:1px solid var(--line); }
-    .modal-head h3 { margin:0; font-size:16px; }
-    .modal-body { padding:18px; }
-    .toast { position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(16px); background:#111827; color:#fff; border-radius:999px; padding:11px 16px; box-shadow:0 18px 50px rgba(17,24,39,.28); opacity:0; pointer-events:none; transition:.22s ease; z-index:9999; font-size:13px; }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand"><div class="logo">AE</div><div><h1>AutoEvolve EE</h1><span>数字主线与 Agentic Workflow</span></div></div>
-      <div class="context-bar">
-        <div class="ctx">项目 <b>X01 平台</b> ⌄</div><div class="ctx">车型 <b>X01 高配 Pro</b> ⌄</div><div class="ctx">基线 <b>BL-2026.04</b> ⌄</div><div class="ctx">阶段 <b>架构冻结</b> ⌄</div>
-        <div class="global-search">⌕ <input placeholder="搜索需求 / Function / 接口 / DTC / Issue / 证据" onkeydown="if(event.key==='Enter')openModal('全局搜索结果', searchResult())" /></div>
-      </div>
-      <div class="top-actions"><button class="icon-btn" onclick="openModal('通知中心', notificationCenter())">🔔<span class="badge-dot"></span></button><button class="icon-btn" onclick="openModal('最近访问', recentView())">🕘</button><button class="icon-btn" onclick="toast('打开帮助文档')">?</button><div class="user-mini" onclick="openRoleMenu()"><div class="avatar" id="userAvatar">通</div><span id="userText">张工｜通信工程师</span>⌄</div></div>
-    </header>
-    <div class="layout">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>整车通信设计平台演示</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
       <aside class="sidebar">
-        <section class="role-summary"><div class="role">当前岗位工作台</div><h2 id="roleTitle">通信工程师</h2><p id="roleDesc">处理接口影响确认、Service / Signal 变更、通信 Issue 与软件协同请求。</p><div class="mini-switch" id="roleQuick"></div></section>
-        <section class="panel nav-panel"><div class="nav-head"><h3>工作域导航</h3><p id="navHint">根据当前岗位显示高频页面。</p></div><nav class="nav-list" id="navList"></nav></section>
+        <div class="brand">
+          <div class="brand-mark">V</div>
+          <div>
+            <strong>VehCom Studio</strong>
+            <span>通信设计全流程平台</span>
+          </div>
+        </div>
+        <nav class="nav-list" aria-label="平台模块">
+          <div class="nav-group">
+            <p>核心功能</p>
+            <button class="nav-item active" data-view-target="workbenchView">
+              <span>工作台</span>
+            </button>
+            <button class="nav-item" data-view-target="topologyView">
+              <span>整车拓扑</span>
+            </button>
+            <button class="nav-item" data-view-target="analyticsView">
+              <span>统计分析</span>
+            </button>
+          </div>
+          <div class="nav-group">
+            <p>协议管理</p>
+            <button class="nav-item" data-view-target="canView">
+              <span>CAN/CAN FD</span>
+            </button>
+            <button class="nav-item" data-view-target="linView">
+              <span>LIN</span>
+            </button>
+            <button class="nav-item" data-view-target="ddsView">
+              <span>DDS</span>
+            </button>
+            <button class="nav-item" data-view-target="someipView">
+              <span>SOME/IP</span>
+            </button>
+          </div>
+          <div class="nav-group">
+            <p>工具中心</p>
+            <button class="nav-item warning">
+              <span>校验中心</span>
+            </button>
+            <button class="nav-item">
+              <span>拆分下发</span>
+            </button>
+            <button class="nav-item">
+              <span>数据类型</span>
+            </button>
+            <button class="nav-item">
+              <span>版本对比</span>
+            </button>
+            <button class="nav-item">
+              <span>矩阵合并</span>
+            </button>
+          </div>
+        </nav>
+        <div class="sidebar-status">
+          <div>
+            <span>完成度</span>
+            <strong>87%</strong>
+          </div>
+          <div class="mini-progress"><i style="width: 87%"></i></div>
+          <p>17 项校验待处理</p>
+        </div>
       </aside>
+
       <main class="main">
-        <section class="page-head"><div><div class="crumb" id="crumb">我的工作台 / 通信工程师</div><h2 class="page-title" id="pageTitle">我的工作台</h2><p class="page-sub" id="pageSub">今天需要处理的专业确认任务、通信 Issue、协同请求和 Gate 阻断。</p></div><div class="page-actions" id="pageActions"></div></section>
-        <section class="content">
-          <div id="page-workbench" class="page active"></div><div id="page-confirmation" class="page"></div><div id="page-impact" class="page"></div><div id="page-function" class="page"></div><div id="page-issue" class="page"></div><div id="page-gate" class="page"></div><div id="page-import" class="page"></div><div id="page-agent" class="page"></div><div id="page-object" class="page"></div>
+        <header class="topbar">
+          <div class="selectors">
+            <label>
+              平台
+              <select>
+                <option>M18-3平台</option>
+                <option>仿真验证平台</option>
+              </select>
+            </label>
+            <label>
+              车型
+              <select>
+                <option>HX-EV01</option>
+                <option>HX-PHEV03</option>
+              </select>
+            </label>
+            <label>
+              版本
+              <select>
+                <option>V1.3 评审版</option>
+                <option>V1.2 量产冻结</option>
+              </select>
+            </label>
+          </div>
+          <div class="top-actions">
+            <div class="search">搜索 ECU / 报文 / Topic / Service</div>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换暗黑主题">暗黑</button>
+            <button class="icon-btn" aria-label="通知">●<span class="badge">3</span></button>
+            <button class="ai-launch" id="aiLaunch">AI</button>
+          </div>
+        </header>
+
+        <section class="workbench-view view-pane active" id="workbenchView">
+          <div class="workbench-status">
+            <div>
+              <span>当前项目</span>
+              <strong>HX-EV01 · V1.3 评审版</strong>
+            </div>
+            <div>
+              <span>数据完成度</span>
+              <strong>87%</strong>
+            </div>
+            <div>
+              <span>最近同步</span>
+              <strong>2 分钟前</strong>
+            </div>
+            <div>
+              <span>冻结状态</span>
+              <strong class="status-warn">评审中</strong>
+            </div>
+            <button class="panel-config" id="panelConfigBtn">配置面板</button>
+            <div class="panel-config-menu" id="panelConfigMenu">
+              <label><input type="checkbox" data-panel-toggle="personalPanel" checked />个人概览</label>
+              <label><input type="checkbox" data-panel-toggle="dataPanel" checked />数据统计</label>
+              <label><input type="checkbox" data-panel-toggle="riskPanel" checked />风险预警</label>
+              <label><input type="checkbox" data-panel-toggle="tracePanel" checked />协作追溯</label>
+            </div>
+          </div>
+
+          <div class="workbench-grid">
+            <section class="workspace-panel personal-panel" id="personalPanel">
+              <div class="panel-title">
+                <div>
+                  <span>个人概览</span>
+                  <h2>今日作业入口</h2>
+                </div>
+                <strong>8 项待办</strong>
+              </div>
+              <div class="profile-line">
+                <div class="avatar">王</div>
+                <div>
+                  <strong>王工 · 通信设计工程师</strong>
+                  <span>负责 CAN/CAN FD 矩阵、网关路由、校验关闭</span>
+                </div>
+              </div>
+              <div class="todo-list">
+                <button><span class="priority high">高</span><strong>处理 ADAS-BUS 负载超阈值</strong><em>今日 18:00</em></button>
+                <button><span class="priority mid">中</span><strong>确认 SOME/IP BatteryHealth 契约</strong><em>明日</em></button>
+                <button><span class="priority low">低</span><strong>补充 LIN 门控信号描述</strong><em>本周</em></button>
+              </div>
+              <div class="quick-links">
+                <button data-view-target="topologyView">整车拓扑</button>
+                <button>校验中心</button>
+                <button>版本对比</button>
+                <button>矩阵合并</button>
+              </div>
+            </section>
+
+            <section class="workspace-panel risk-panel" id="riskPanel">
+              <div class="panel-title">
+                <div>
+                  <span>风险预警</span>
+                  <h2>待关闭问题</h2>
+                </div>
+                <strong class="risk-count">17</strong>
+              </div>
+              <div class="risk-summary">
+                <div><strong>5</strong><span>错误</span></div>
+                <div><strong>8</strong><span>警告</span></div>
+                <div><strong>4</strong><span>风险</span></div>
+              </div>
+              <div class="risk-list">
+                <div>
+                  <span class="risk-tag error">错误</span>
+                  <strong>CAN FD ADAS-BUS 负载 73%，超过评审阈值</strong>
+                  <button class="ai-suggest" data-ai-prompt="分析 ADAS-BUS 负载超阈值原因并给出处理建议">AI 建议</button>
+                </div>
+                <div>
+                  <span class="risk-tag warn">警告</span>
+                  <strong>SOME/IP 服务变更缺少降级策略说明</strong>
+                  <button class="ai-suggest" data-ai-prompt="为 SOME/IP 服务变更生成影响范围和降级策略建议">AI 建议</button>
+                </div>
+                <div>
+                  <span class="risk-tag risk">风险</span>
+                  <strong>V1.2/V1.3 存在 6 条回传冲突未确认</strong>
+                  <button class="ai-suggest" data-ai-prompt="总结 V1.2 到 V1.3 的回传冲突并建议保留版本">AI 建议</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="workspace-panel data-panel" id="dataPanel">
+              <div class="panel-title">
+                <div>
+                  <span>数据统计</span>
+                  <h2>协议完成度矩阵</h2>
+                </div>
+                <strong>实时同步</strong>
+              </div>
+              <div class="protocol-matrix">
+                <button>
+                  <span>CAN/CAN FD</span>
+                  <strong>428</strong>
+                  <i><b style="width: 91%"></b></i>
+                  <em>完成度 91% · 问题 9</em>
+                </button>
+                <button>
+                  <span>LIN</span>
+                  <strong>96</strong>
+                  <i><b style="width: 84%"></b></i>
+                  <em>完成度 84% · 问题 4</em>
+                </button>
+                <button>
+                  <span>DDS</span>
+                  <strong>34</strong>
+                  <i><b style="width: 79%"></b></i>
+                  <em>完成度 79% · 问题 2</em>
+                </button>
+                <button>
+                  <span>SOME/IP</span>
+                  <strong>51</strong>
+                  <i><b style="width: 88%"></b></i>
+                  <em>完成度 88% · 问题 2</em>
+                </button>
+              </div>
+            </section>
+
+            <section class="workspace-panel trace-panel" id="tracePanel">
+              <div class="panel-title">
+                <div>
+                  <span>协作追溯</span>
+                  <h2>团队分工与操作日志</h2>
+                </div>
+                <strong>12 人参与</strong>
+              </div>
+              <div class="trace-grid">
+                <div class="member-list">
+                  <div><strong>王工</strong><span>CAN 矩阵 · 处理中</span></div>
+                  <div><strong>李工</strong><span>SOME/IP 服务 · 待评审</span></div>
+                  <div><strong>张工</strong><span>DDS Topic · 已同步</span></div>
+                  <div><strong>赵工</strong><span>校验关闭 · 进行中</span></div>
+                </div>
+                <div class="audit-feed">
+                  <p><strong>10:42</strong> 王工修改 Body-CAN 信号周期，触发 2 条负载警告。</p>
+                  <p><strong>10:18</strong> 李工新增 BatteryHealth Method，等待服务契约确认。</p>
+                  <p><strong>09:56</strong> 自动化作业完成拓扑生成，新增 6 个 ECU 节点。</p>
+                  <p><strong>09:21</strong> 张工关闭 DDS Topic 命名问题 3 项。</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="protocol-view view-pane" id="canView">
+          <div class="protocol-status">
+            <div>
+              <span>协议模块</span>
+              <strong>CAN/CAN FD</strong>
+            </div>
+            <div>
+              <span>对象总数</span>
+              <strong>428</strong>
+            </div>
+            <div>
+              <span>完成度</span>
+              <strong>91%</strong>
+            </div>
+            <div>
+              <span>最高负载</span>
+              <strong class="status-warn">73%</strong>
+            </div>
+            <div>
+              <span>校验问题</span>
+              <strong class="risk-count">9</strong>
+            </div>
+            <div class="bus-load-mini">
+              <span>总线负载概览</span>
+              <div class="bus-load-bars">
+                <div class="bus-load-item">
+                  <small>ADAS-CANFD</small>
+                  <div class="load-bar-wrap"><i style="width:73%"><b>73%</b></i></div>
+                </div>
+                <div class="bus-load-item">
+                  <small>Body-CAN</small>
+                  <div class="load-bar-wrap"><i style="width:41%"><b>41%</b></i></div>
+                </div>
+                <div class="bus-load-item">
+                  <small>Power-CAN</small>
+                  <div class="load-bar-wrap"><i style="width:58%"><b>58%</b></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="protocol-tabs">
+            <button class="active" data-object-tab="messages">📋 报文列表</button>
+            <button data-object-tab="signals">⚡ 信号矩阵</button>
+            <button data-object-tab="segments">🔗 网段配置</button>
+            <button data-object-tab="ecus">🖥 ECU节点</button>
+          </div>
+
+          <div class="protocol-toolbar">
+            <div class="tool-actions">
+              <button>新增</button>
+              <button>删除</button>
+              <button>批量修改</button>
+              <button>导入</button>
+              <button>导出</button>
+              <button>DBC 生成</button>
+              <button>负载分析</button>
+            </div>
+            <div class="protocol-filters">
+              <select><option>ADAS-CANFD</option><option>Body-CAN</option><option>Power-CAN</option></select>
+              <select><option>全部 ECU</option><option>ADAS_DCU</option><option>BMS</option><option>EPS</option><option>BCM</option></select>
+              <select><option>全部状态</option><option>有错误</option><option>已修改</option><option>新增</option></select>
+              <input id="protocolSearch" placeholder="搜索报文 / ID / ECU / 信号" />
+            </div>
+          </div>
+
+          <div class="protocol-layout">
+            <aside class="object-tree">
+              <div class="tree-title"><span>📂 层级视图</span><button class="tree-collapse-btn" title="收起层级视图">◀</button></div>
+              <div class="tree-node expanded" data-tree="adas-canfd">
+                <button class="tree-toggle">▾ ADAS-CANFD <em>CAN FD · 2Mbps</em></button>
+                <div class="tree-children">
+                  <div class="tree-node expanded" data-tree="adas-dcu">
+                    <button class="tree-toggle">▾ ADAS_DCU <small>6 报文</small></button>
+                    <div class="tree-children">
+                      <button class="tree-leaf active" data-tree-leaf="Msg_ADAS_ObjList">📨 Msg_ADAS_ObjList <small>10ms</small></button>
+                      <button class="tree-leaf" data-tree-leaf="Msg_ADAS_Target">📨 Msg_ADAS_Target <small>20ms</small></button>
+                      <button class="tree-leaf" data-tree-leaf="Msg_ADAS_Ctrl">📨 Msg_ADAS_Ctrl <small>10ms</small></button>
+                    </div>
+                  </div>
+                  <div class="tree-node" data-tree="eps">
+                    <button class="tree-toggle">▸ EPS <small>3 报文</small></button>
+                    <div class="tree-children hidden"></div>
+                  </div>
+                  <div class="tree-node" data-tree="steer">
+                    <button class="tree-toggle">▸ 转向 ECU <small>2 报文</small></button>
+                    <div class="tree-children hidden"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tree-node" data-tree="body-can">
+                <button class="tree-toggle">▸ Body-CAN <em>CAN · 500kbps</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+              <div class="tree-node" data-tree="power-can">
+                <button class="tree-toggle">▸ Power-CAN <em>CAN · 500kbps</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+            </aside>
+
+            <section class="excel-region">
+              <div class="breadcrumb" id="canBreadcrumb">CAN/CAN FD / ADAS-CANFD / ADAS_DCU / 报文列表</div>
+
+              <div class="excel-table-wrap" id="canMessageTable">
+                <table class="excel-table">
+                  <thead>
+                    <tr>
+                      <th class="row-no">#</th>
+                      <th><input type="checkbox" id="canSelectAll" /></th>
+                      <th>状态</th>
+                      <th>报文名称</th>
+                      <th>CAN ID</th>
+                      <th>类型</th>
+                      <th>网段</th>
+                      <th>发送 ECU</th>
+                      <th>周期</th>
+                      <th>DLC</th>
+                      <th>CAN FD</th>
+                      <th>BRS</th>
+                      <th>速率</th>
+                      <th>负载贡献</th>
+                      <th>校验</th>
+                      <th>修改人</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="selected" data-title="Msg_ADAS_ObjList" data-id="0x18F20321" data-desc="目标列表报文，周期从 20ms 调整为 10ms，是当前 ADAS-CANFD 负载升高的主要来源。" data-segment="ADAS-CANFD" data-ecu="ADAS_DCU" data-signals="12" data-version="周期 20ms → 10ms" data-check="负载警告">
+                      <td class="row-no">1</td>
+                      <td><input type="checkbox" checked /></td>
+                      <td><span class="diff-mark changed">修改</span></td>
+                      <td contenteditable="true">Msg_ADAS_ObjList</td>
+                      <td class="cell-mono">0x18F20321</td>
+                      <td>扩展帧</td>
+                      <td>ADAS-CANFD</td>
+                      <td>ADAS_DCU</td>
+                      <td class="cell-warning">10ms</td>
+                      <td>64</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="brs-on">ON</span></td>
+                      <td>2Mbps</td>
+                      <td class="cell-critical">18.4%</td>
+                      <td><span class="risk-tag warn">警告</span></td>
+                      <td>王工</td>
+                    </tr>
+                    <tr data-title="Msg_BMS_Status" data-id="0x18F11002" data-desc="BMS 状态报文，包含 SOC、SOH、最高单体温度等信号，当前校验通过。" data-segment="Power-CAN" data-ecu="BMS" data-signals="8" data-version="无变更" data-check="通过">
+                      <td class="row-no">2</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark normal">正常</span></td>
+                      <td contenteditable="true">Msg_BMS_Status</td>
+                      <td class="cell-mono">0x18F11002</td>
+                      <td>扩展帧</td>
+                      <td>Power-CAN</td>
+                      <td>BMS</td>
+                      <td>100ms</td>
+                      <td>8</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>500kbps</td>
+                      <td>4.2%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>赵工</td>
+                    </tr>
+                    <tr data-title="Msg_Body_LampCmd" data-id="0x312" data-desc="车身灯光控制报文，存在信号描述缺失，需要补齐矩阵说明。" data-segment="Body-CAN" data-ecu="BCM" data-signals="6" data-version="新增报文" data-check="错误">
+                      <td class="row-no">3</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark new">新增</span></td>
+                      <td contenteditable="true">Msg_Body_LampCmd</td>
+                      <td class="cell-mono">0x312</td>
+                      <td>标准帧</td>
+                      <td>Body-CAN</td>
+                      <td>BCM</td>
+                      <td>50ms</td>
+                      <td>8</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>500kbps</td>
+                      <td>2.9%</td>
+                      <td><span class="risk-tag error">错误</span></td>
+                      <td>李工</td>
+                    </tr>
+                    <tr data-title="Msg_EPS_Angle" data-id="0x18F20510" data-desc="转向角状态报文，和 ADAS 域控制器存在控制链路依赖。" data-segment="ADAS-CANFD" data-ecu="EPS" data-signals="5" data-version="无变更" data-check="通过">
+                      <td class="row-no">4</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark changed">修改</span></td>
+                      <td contenteditable="true">Msg_EPS_Angle</td>
+                      <td class="cell-mono">0x18F20510</td>
+                      <td>扩展帧</td>
+                      <td>ADAS-CANFD</td>
+                      <td>EPS</td>
+                      <td>20ms</td>
+                      <td>12</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="brs-off">OFF</span></td>
+                      <td>500kbps</td>
+                      <td>8.1%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>王工</td>
+                    </tr>
+                    <tr data-title="Msg_ADAS_Target" data-id="0x18F20322" data-desc="目标检测结果报文，包含目标ID、类型、距离、速度等信息。" data-segment="ADAS-CANFD" data-ecu="ADAS_DCU" data-signals="16" data-version="无变更" data-check="通过">
+                      <td class="row-no">5</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark normal">正常</span></td>
+                      <td contenteditable="true">Msg_ADAS_Target</td>
+                      <td class="cell-mono">0x18F20322</td>
+                      <td>扩展帧</td>
+                      <td>ADAS-CANFD</td>
+                      <td>ADAS_DCU</td>
+                      <td>20ms</td>
+                      <td>48</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="brs-on">ON</span></td>
+                      <td>2Mbps</td>
+                      <td>12.6%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>王工</td>
+                    </tr>
+                    <tr data-title="Msg_BMS_Temp" data-id="0x18F11003" data-desc="电池温度报文，包含各单体最高/最低温度及冷却状态。" data-segment="Power-CAN" data-ecu="BMS" data-signals="10" data-version="周期 500ms → 200ms" data-check="警告">
+                      <td class="row-no">6</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark changed">修改</span></td>
+                      <td contenteditable="true">Msg_BMS_Temp</td>
+                      <td class="cell-mono">0x18F11003</td>
+                      <td>扩展帧</td>
+                      <td>Power-CAN</td>
+                      <td>BMS</td>
+                      <td class="cell-warning">200ms</td>
+                      <td>8</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>500kbps</td>
+                      <td>5.8%</td>
+                      <td><span class="risk-tag warn">警告</span></td>
+                      <td>赵工</td>
+                    </tr>
+                    <tr data-title="Msg_ADAS_Ctrl" data-id="0x18F20323" data-desc="ADAS 控制指令报文，包含纵向/横向控制请求及安全校验码。" data-segment="ADAS-CANFD" data-ecu="ADAS_DCU" data-signals="8" data-version="新增报文" data-check="通过">
+                      <td class="row-no">7</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark new">新增</span></td>
+                      <td contenteditable="true">Msg_ADAS_Ctrl</td>
+                      <td class="cell-mono">0x18F20323</td>
+                      <td>扩展帧</td>
+                      <td>ADAS-CANFD</td>
+                      <td>ADAS_DCU</td>
+                      <td>10ms</td>
+                      <td>16</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="brs-on">ON</span></td>
+                      <td>2Mbps</td>
+                      <td>14.2%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>王工</td>
+                    </tr>
+                    <tr data-title="Msg_Body_Window" data-id="0x313" data-desc="车窗控制状态报文，含四门车窗位置及防夹状态反馈。" data-segment="Body-CAN" data-ecu="BCM" data-signals="8" data-version="无变更" data-check="通过">
+                      <td class="row-no">8</td>
+                      <td><input type="checkbox" /></td>
+                      <td><span class="diff-mark normal">正常</span></td>
+                      <td contenteditable="true">Msg_Body_Window</td>
+                      <td class="cell-mono">0x313</td>
+                      <td>标准帧</td>
+                      <td>Body-CAN</td>
+                      <td>BCM</td>
+                      <td>100ms</td>
+                      <td>8</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>500kbps</td>
+                      <td>3.1%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>李工</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="excel-table-wrap hidden" id="canSignalTable">
+                <table class="excel-table">
+                  <thead>
+                    <tr>
+                      <th class="row-no">#</th>
+                      <th><input type="checkbox" /></th>
+                      <th>信号名称</th>
+                      <th>所属报文</th>
+                      <th>起始位</th>
+                      <th>位宽</th>
+                      <th>字节序</th>
+                      <th>数据类型</th>
+                      <th>因子</th>
+                      <th>偏移量</th>
+                      <th>物理最小值</th>
+                      <th>物理最大值</th>
+                      <th>单位</th>
+                      <th>校验</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-title="Sig_ObjId" data-desc="目标物体唯一标识符">
+                      <td class="row-no">1</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_ObjId</td>
+                      <td>Msg_ADAS_ObjList</td>
+                      <td>0</td>
+                      <td>8</td>
+                      <td>Intel</td>
+                      <td>uint8</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>255</td>
+                      <td>—</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                    <tr data-title="Sig_ObjType" data-desc="目标类型：0=未知 1=车辆 2=行人 3=自行车">
+                      <td class="row-no">2</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_ObjType</td>
+                      <td>Msg_ADAS_ObjList</td>
+                      <td>8</td>
+                      <td>3</td>
+                      <td>Intel</td>
+                      <td>uint3</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>7</td>
+                      <td>—</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                    <tr data-title="Sig_ObjDistX" data-desc="目标纵向距离">
+                      <td class="row-no">3</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_ObjDistX</td>
+                      <td>Msg_ADAS_ObjList</td>
+                      <td>11</td>
+                      <td>12</td>
+                      <td>Intel</td>
+                      <td>uint12</td>
+                      <td>0.0625</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>255.9375</td>
+                      <td>m</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                    <tr data-title="Sig_ObjDistY" data-desc="目标横向距离">
+                      <td class="row-no">4</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_ObjDistY</td>
+                      <td>Msg_ADAS_ObjList</td>
+                      <td>23</td>
+                      <td>10</td>
+                      <td>Intel</td>
+                      <td>int10</td>
+                      <td>0.0625</td>
+                      <td>-32</td>
+                      <td>-32</td>
+                      <td>31.9375</td>
+                      <td>m</td>
+                      <td><span class="risk-tag warn">警告</span></td>
+                    </tr>
+                    <tr data-title="Sig_ObjVelX" data-desc="目标纵向相对速度">
+                      <td class="row-no">5</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_ObjVelX</td>
+                      <td>Msg_ADAS_ObjList</td>
+                      <td>33</td>
+                      <td>11</td>
+                      <td>Intel</td>
+                      <td>int11</td>
+                      <td>0.0625</td>
+                      <td>-64</td>
+                      <td>-64</td>
+                      <td>63.9375</td>
+                      <td>m/s</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                    <tr data-title="Sig_SOC" data-desc="电池荷电状态">
+                      <td class="row-no">6</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_SOC</td>
+                      <td>Msg_BMS_Status</td>
+                      <td>0</td>
+                      <td>8</td>
+                      <td>Motorola</td>
+                      <td>uint8</td>
+                      <td>0.4</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>100</td>
+                      <td>%</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                    <tr data-title="Sig_SOH" data-desc="电池健康状态">
+                      <td class="row-no">7</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_SOH</td>
+                      <td>Msg_BMS_Status</td>
+                      <td>8</td>
+                      <td>8</td>
+                      <td>Motorola</td>
+                      <td>uint8</td>
+                      <td>0.4</td>
+                      <td>0</td>
+                      <td>0</td>
+                      <td>100</td>
+                      <td>%</td>
+                      <td><span class="risk-tag error">错误</span></td>
+                    </tr>
+                    <tr data-title="Sig_MaxCellTemp" data-desc="最高单体温度">
+                      <td class="row-no">8</td>
+                      <td><input type="checkbox" /></td>
+                      <td contenteditable="true">Sig_MaxCellTemp</td>
+                      <td>Msg_BMS_Status</td>
+                      <td>16</td>
+                      <td>8</td>
+                      <td>Motorola</td>
+                      <td>uint8</td>
+                      <td>1</td>
+                      <td>-40</td>
+                      <td>-40</td>
+                      <td>215</td>
+                      <td>°C</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="excel-table-wrap hidden" id="canSegmentTable">
+                <table class="excel-table">
+                  <thead>
+                    <tr>
+                      <th class="row-no">#</th>
+                      <th>网段名称</th>
+                      <th>协议类型</th>
+                      <th>波特率</th>
+                      <th>数据场速率</th>
+                      <th>报文数量</th>
+                      <th>当前负载</th>
+                      <th>负载阈值</th>
+                      <th>状态</th>
+                      <th>描述</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="row-no">1</td>
+                      <td><strong>ADAS-CANFD</strong></td>
+                      <td><span class="canfd-badge">CAN FD</span></td>
+                      <td>500kbps</td>
+                      <td>2Mbps</td>
+                      <td>12</td>
+                      <td class="cell-critical">73%</td>
+                      <td>65%</td>
+                      <td><span class="risk-tag warn">超阈值</span></td>
+                      <td>ADAS 感知-规划-控制高速链路</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">2</td>
+                      <td><strong>Body-CAN</strong></td>
+                      <td>CAN 2.0</td>
+                      <td>500kbps</td>
+                      <td>—</td>
+                      <td>18</td>
+                      <td>41%</td>
+                      <td>50%</td>
+                      <td><span class="risk-tag ok">正常</span></td>
+                      <td>车身舒适域低速控制链路</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">3</td>
+                      <td><strong>Power-CAN</strong></td>
+                      <td>CAN 2.0</td>
+                      <td>500kbps</td>
+                      <td>—</td>
+                      <td>14</td>
+                      <td>58%</td>
+                      <td>55%</td>
+                      <td><span class="risk-tag warn">接近阈值</span></td>
+                      <td>动力传动系统控制链路</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="excel-table-wrap hidden" id="canEcuTable">
+                <table class="excel-table">
+                  <thead>
+                    <tr>
+                      <th class="row-no">#</th>
+                      <th>ECU 名称</th>
+                      <th>所属网段</th>
+                      <th>发送报文</th>
+                      <th>接收报文</th>
+                      <th>信号数量</th>
+                      <th>CAN FD 支持</th>
+                      <th>校验状态</th>
+                      <th>最后修改</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="row-no">1</td>
+                      <td><strong>ADAS_DCU</strong></td>
+                      <td>ADAS-CANFD</td>
+                      <td>6</td>
+                      <td>4</td>
+                      <td>48</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="risk-tag warn">3 警告</span></td>
+                      <td>王工 · 10:42</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">2</td>
+                      <td><strong>BMS</strong></td>
+                      <td>Power-CAN</td>
+                      <td>5</td>
+                      <td>2</td>
+                      <td>38</td>
+                      <td>—</td>
+                      <td><span class="risk-tag error">1 错误</span></td>
+                      <td>赵工 · 09:18</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">3</td>
+                      <td><strong>BCM</strong></td>
+                      <td>Body-CAN</td>
+                      <td>8</td>
+                      <td>3</td>
+                      <td>52</td>
+                      <td>—</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>李工 · 08:56</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">4</td>
+                      <td><strong>EPS</strong></td>
+                      <td>ADAS-CANFD</td>
+                      <td>3</td>
+                      <td>5</td>
+                      <td>24</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>王工 · 10:30</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">5</td>
+                      <td><strong>转向 ECU</strong></td>
+                      <td>ADAS-CANFD</td>
+                      <td>2</td>
+                      <td>3</td>
+                      <td>16</td>
+                      <td><span class="canfd-badge">FD</span></td>
+                      <td><span class="risk-tag warn">1 警告</span></td>
+                      <td>王工 · 10:35</td>
+                    </tr>
+                    <tr>
+                      <td class="row-no">6</td>
+                      <td><strong>制动 ECU</strong></td>
+                      <td>Power-CAN</td>
+                      <td>4</td>
+                      <td>3</td>
+                      <td>28</td>
+                      <td>—</td>
+                      <td><span class="risk-tag ok">通过</span></td>
+                      <td>赵工 · 09:22</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="protocol-footer" id="canFooter">
+                <span>共 428 条 · 已筛选 76 条 · 已选择 1 条</span>
+                <span>错误 2 · 警告 7 · 已自动保存 · V1.3 评审分支</span>
+              </div>
+            </section>
+
+            <aside class="protocol-props">
+              <div class="props-current-type">
+                <span>当前选中</span>
+                <span class="props-tag" id="canPropsTag">报文</span>
+              </div>
+              <h3 id="canPropTitle">Msg_ADAS_ObjList</h3>
+              <p id="canPropDesc">目标列表报文，周期从 20ms 调整为 10ms，是当前 ADAS-CANFD 负载升高的主要来源。</p>
+              <div class="prop-list">
+                <div><span>CAN ID</span><strong id="canPropId">0x18F20321</strong></div>
+                <div><span>所属网段</span><strong id="canPropSegment">ADAS-CANFD</strong></div>
+                <div><span>发送 ECU</span><strong id="canPropEcu">ADAS_DCU</strong></div>
+                <div><span>关联信号</span><strong id="canPropSignals">12</strong></div>
+                <div><span>版本差异</span><strong id="canPropVersion">周期 20ms → 10ms</strong></div>
+                <div><span>校验结果</span><strong id="canPropCheck" class="status-warn">负载警告</strong></div>
+              </div>
+              <div class="prop-actions">
+                <button id="canPropViewSignal">查看信号</button>
+                <button>版本追溯</button>
+                <button class="ai-suggest" data-ai-prompt="解释 Msg_ADAS_ObjList 周期变更为什么导致 ADAS-CANFD 负载升高，并给出优化建议">AI 建议</button>
+              </div>
+              <div class="prop-load-chart">
+                <span>该网段负载分布</span>
+                <div class="load-distribution">
+                  <div class="load-dist-item">
+                    <div class="load-dist-label">Msg_ADAS_ObjList</div>
+                    <div class="load-dist-bar"><i style="width:18.4%"></i><b>18.4%</b></div>
+                  </div>
+                  <div class="load-dist-item">
+                    <div class="load-dist-label">Msg_ADAS_Ctrl</div>
+                    <div class="load-dist-bar"><i style="width:14.2%"></i><b>14.2%</b></div>
+                  </div>
+                  <div class="load-dist-item">
+                    <div class="load-dist-label">Msg_ADAS_Target</div>
+                    <div class="load-dist-bar"><i style="width:12.6%"></i><b>12.6%</b></div>
+                  </div>
+                  <div class="load-dist-item">
+                    <div class="load-dist-label">Msg_EPS_Angle</div>
+                    <div class="load-dist-bar"><i style="width:8.1%"></i><b>8.1%</b></div>
+                  </div>
+                  <div class="load-dist-item">
+                    <div class="load-dist-label">其他 8 条报文</div>
+                    <div class="load-dist-bar"><i style="width:19.7%"></i><b>19.7%</b></div>
+                  </div>
+                  <div class="load-dist-item threshold">
+                    <div class="load-dist-bar"><i class="threshold-line" style="left:65%"></i><span>阈值 65%</span></div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="protocol-view view-pane" id="linView">
+          <div class="protocol-status">
+            <div><span>协议模块</span><strong>LIN</strong></div>
+            <div><span>对象总数</span><strong>96</strong></div>
+            <div><span>完成度</span><strong>84%</strong></div>
+            <div><span>集群数</span><strong>3</strong></div>
+            <div><span>校验问题</span><strong class="risk-count">4</strong></div>
+          </div>
+          <div class="protocol-tabs">
+            <button class="active" data-protocol="lin" data-object-tab="lin-clusters">集群</button>
+            <button data-protocol="lin" data-object-tab="lin-nodes">主/从节点</button>
+            <button data-protocol="lin" data-object-tab="lin-frames">帧</button>
+            <button data-protocol="lin" data-object-tab="lin-signals">信号</button>
+            <button data-protocol="lin" data-object-tab="lin-schedules">调度表</button>
+          </div>
+          <div class="protocol-toolbar">
+            <div class="tool-actions">
+              <button>新增</button><button>删除</button><button>批量修改</button>
+              <button>导入</button><button>导出</button><button>LDF 解析</button>
+              <button>调度表生成</button><button>AI 建议</button>
+            </div>
+            <div class="protocol-filters">
+              <select><option>全部集群</option><option>Body-LIN</option><option>Door-LIN</option></select>
+              <select><option>全部节点</option><option>BCM</option><option>门控 ECU</option></select>
+              <select><option>全部状态</option><option>有错误</option><option>已修改</option></select>
+              <input placeholder="搜索帧 / ID / 信号" />
+            </div>
+          </div>
+          <div class="protocol-layout">
+            <aside class="object-tree">
+              <div class="tree-title"><span>📂 层级视图</span><button class="tree-collapse-btn" title="收起层级视图">◀</button></div>
+              <div class="tree-node expanded" data-tree="body-lin">
+                <button class="tree-toggle">▾ Body-LIN <em>19.2kbps</em></button>
+                <div class="tree-children">
+                  <div class="tree-node expanded" data-tree="bcm-lin">
+                    <button class="tree-toggle">▾ BCM (主节点)</button>
+                    <div class="tree-children">
+                      <button class="tree-leaf active" data-tree-leaf="LinFrame_Body_Status">📨 LinFrame_Body_Status</button>
+                      <button class="tree-leaf" data-tree-leaf="LinFrame_Lamp_Ctrl">📨 LinFrame_Lamp_Ctrl</button>
+                    </div>
+                  </div>
+                  <div class="tree-node" data-tree="door-lin-node">
+                    <button class="tree-toggle">▸ 门控 ECU (从节点)</button>
+                    <div class="tree-children hidden"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tree-node" data-tree="door-lin">
+                <button class="tree-toggle">▸ Door-LIN <em>19.2kbps</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+            </aside>
+            <section class="excel-region">
+              <div class="breadcrumb" id="linBreadcrumb">LIN / Body-LIN / BCM / 集群</div>
+              <div class="excel-table-wrap" id="linClusterTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>集群名称</th><th>主节点</th><th>从节点数</th><th>波特率</th><th>帧数量</th><th>调度表</th><th>唤醒方式</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Body-LIN" data-desc="车身域 LIN 集群，连接 BCM 及门控、灯控等从节点"><td class="row-no">1</td><td><strong>Body-LIN</strong></td><td>BCM</td><td>4</td><td>19.2kbps</td><td>16</td><td>Sched_Body</td><td>主节点唤醒</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Door-LIN" data-desc="车门 LIN 子集群，管理四门车窗及后视镜"><td class="row-no">2</td><td><strong>Door-LIN</strong></td><td>门控 ECU</td><td>2</td><td>19.2kbps</td><td>8</td><td>Sched_Door</td><td>主节点唤醒</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Lamp-LIN" data-desc="灯光 LIN 集群，控制外部矩阵灯及氛围灯"><td class="row-no">3</td><td><strong>Lamp-LIN</strong></td><td>BCM</td><td>3</td><td>19.2kbps</td><td>12</td><td>Sched_Lamp</td><td>主节点唤醒</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="linNodeTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>节点名称</th><th>角色</th><th>所属集群</th><th>节点地址</th><th>发送帧</th><th>接收帧</th><th>信号数</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="BCM" data-desc="LIN 主节点，管理 Body-LIN 和 Lamp-LIN 集群调度"><td class="row-no">1</td><td><strong>BCM</strong></td><td>主节点</td><td>Body-LIN</td><td class="cell-mono">0x00</td><td>8</td><td>4</td><td>42</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="门控 ECU" data-desc="车门控制从节点，管理车窗、门锁、后视镜"><td class="row-no">2</td><td><strong>门控 ECU</strong></td><td>从节点</td><td>Body-LIN</td><td class="cell-mono">0x18</td><td>3</td><td>6</td><td>16</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="灯控 ECU" data-desc="灯光控制从节点，管理外部灯光及氛围灯"><td class="row-no">3</td><td><strong>灯控 ECU</strong></td><td>从节点</td><td>Body-LIN</td><td class="cell-mono">0x1A</td><td>2</td><td>5</td><td>12</td><td><span class="risk-tag error">错误</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="linFrameTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>帧名称</th><th>帧 ID</th><th>类型</th><th>所属集群</th><th>发送节点</th><th>接收节点</th><th>周期</th><th>DLC</th><th>信号数</th><th>校验方式</th><th>校验</th></tr></thead><tbody>
+                  <tr class="selected" data-title="LinFrame_Body_Status" data-desc="车身状态帧，包含门窗锁、灯光等基础状态"><td class="row-no">1</td><td contenteditable="true">LinFrame_Body_Status</td><td class="cell-mono">0x20</td><td>无条件帧</td><td>Body-LIN</td><td>BCM</td><td>门控/灯控/座椅</td><td>50ms</td><td>8</td><td>12</td><td>增强校验</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="LinFrame_Lamp_Ctrl" data-desc="灯光控制帧"><td class="row-no">2</td><td contenteditable="true">LinFrame_Lamp_Ctrl</td><td class="cell-mono">0x21</td><td>无条件帧</td><td>Body-LIN</td><td>BCM</td><td>灯控 ECU</td><td>100ms</td><td>6</td><td>8</td><td>增强校验</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="LinFrame_Window_Pos" data-desc="车窗位置反馈帧"><td class="row-no">3</td><td contenteditable="true">LinFrame_Window_Pos</td><td class="cell-mono">0x30</td><td>事件触发帧</td><td>Body-LIN</td><td>门控 ECU</td><td>BCM</td><td>事件</td><td>4</td><td>4</td><td>经典校验</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="LinFrame_Door_Lock" data-desc="门锁状态帧"><td class="row-no">4</td><td contenteditable="true">LinFrame_Door_Lock</td><td class="cell-mono">0x31</td><td>无条件帧</td><td>Body-LIN</td><td>门控 ECU</td><td>BCM</td><td>200ms</td><td>3</td><td>3</td><td>经典校验</td><td><span class="risk-tag error">错误</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="linSignalTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>信号名称</th><th>所属帧</th><th>起始位</th><th>位宽</th><th>数据类型</th><th>因子</th><th>偏移量</th><th>物理最小值</th><th>物理最大值</th><th>单位</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Sig_DoorLock_Status" data-desc="门锁状态：0=解锁 1=上锁"><td class="row-no">1</td><td contenteditable="true">Sig_DoorLock_Status</td><td>LinFrame_Body_Status</td><td>0</td><td>2</td><td>uint2</td><td>1</td><td>0</td><td>0</td><td>3</td><td>—</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Sig_WindowPos_FL" data-desc="左前窗位置百分比"><td class="row-no">2</td><td contenteditable="true">Sig_WindowPos_FL</td><td>LinFrame_Body_Status</td><td>2</td><td>8</td><td>uint8</td><td>0.4</td><td>0</td><td>0</td><td>100</td><td>%</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Sig_AmbLight_Level" data-desc="氛围灯亮度等级"><td class="row-no">3</td><td contenteditable="true">Sig_AmbLight_Level</td><td>LinFrame_Lamp_Ctrl</td><td>0</td><td>4</td><td>uint4</td><td>1</td><td>0</td><td>0</td><td>15</td><td>级</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Sig_Mirror_Angle" data-desc="后视镜角度"><td class="row-no">4</td><td contenteditable="true">Sig_Mirror_Angle</td><td>LinFrame_Window_Pos</td><td>0</td><td>8</td><td>uint8</td><td>1</td><td>-128</td><td>-128</td><td>127</td><td>°</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="linScheduleTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>调度表名称</th><th>所属集群</th><th>帧数量</th><th>调度周期</th><th>时基</th><th>帧顺序</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Sched_Body" data-desc="Body-LIN 主调度表"><td class="row-no">1</td><td><strong>Sched_Body</strong></td><td>Body-LIN</td><td>16</td><td>50ms</td><td>5ms</td><td>Status → Lamp → Window → Lock → Diag</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Sched_Door" data-desc="Door-LIN 调度表"><td class="row-no">2</td><td><strong>Sched_Door</strong></td><td>Door-LIN</td><td>8</td><td>100ms</td><td>10ms</td><td>WindowPos → Lock → Mirror → Diag</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Sched_Lamp" data-desc="Lamp-LIN 调度表"><td class="row-no">3</td><td><strong>Sched_Lamp</strong></td><td>Lamp-LIN</td><td>12</td><td>50ms</td><td>5ms</td><td>HeadLamp → TurnSig → AmbLight → Fault</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="protocol-footer" id="linFooter"><span>共 96 条 · 已筛选 32 条 · 已选择 1 条</span><span>错误 1 · 警告 3 · 已自动保存 · V1.3 评审分支</span></div>
+            </section>
+            <aside class="protocol-props">
+              <div class="props-current-type"><span>当前选中</span><span class="props-tag" id="linPropsTag">集群</span></div>
+              <h3 id="linPropTitle">Body-LIN</h3>
+              <p id="linPropDesc">车身域 LIN 集群，连接 BCM 及门控、灯控等从节点</p>
+              <div class="prop-list">
+                <div><span>主节点</span><strong id="linPropMaster">BCM</strong></div>
+                <div><span>从节点数</span><strong id="linPropSlaves">4</strong></div>
+                <div><span>波特率</span><strong id="linPropBaud">19.2kbps</strong></div>
+                <div><span>帧数量</span><strong id="linPropFrames">16</strong></div>
+                <div><span>调度表</span><strong id="linPropSchedule">Sched_Body</strong></div>
+                <div><span>校验结果</span><strong id="linPropCheck" class="status-ok">通过</strong></div>
+              </div>
+              <div class="prop-actions">
+                <button>查看帧</button><button>版本追溯</button>
+                <button class="ai-suggest" data-ai-prompt="分析 Body-LIN 集群的调度表是否合理">AI 建议</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="protocol-view view-pane" id="ddsView">
+          <div class="protocol-status">
+            <div><span>协议模块</span><strong>DDS</strong></div>
+            <div><span>对象总数</span><strong>34</strong></div>
+            <div><span>完成度</span><strong>79%</strong></div>
+            <div><span>活跃 Topic</span><strong>23</strong></div>
+            <div><span>校验问题</span><strong class="risk-count">2</strong></div>
+          </div>
+          <div class="protocol-tabs">
+            <button class="active" data-protocol="dds" data-object-tab="dds-domains">域</button>
+            <button data-protocol="dds" data-object-tab="dds-nodes">节点</button>
+            <button data-protocol="dds" data-object-tab="dds-topics">Topic</button>
+            <button data-protocol="dds" data-object-tab="dds-qos">QoS</button>
+            <button data-protocol="dds" data-object-tab="dds-pubsub">发布/订阅</button>
+          </div>
+          <div class="protocol-toolbar">
+            <div class="tool-actions">
+              <button>新增</button><button>删除</button><button>批量修改</button>
+              <button>导入</button><button>导出</button><button>IDL 解析</button>
+              <button>QoS 模板</button><button>数据流向</button><button>AI 建议</button>
+            </div>
+            <div class="protocol-filters">
+              <select><option>全部域</option><option>感知域</option><option>规划域</option></select>
+              <select><option>全部节点</option><option>前视摄像头</option><option>激光雷达</option></select>
+              <select><option>全部状态</option><option>有错误</option><option>已修改</option></select>
+              <input placeholder="搜索 Topic / 域 / 节点" />
+            </div>
+          </div>
+          <div class="protocol-layout">
+            <aside class="object-tree">
+              <div class="tree-title"><span>📂 层级视图</span><button class="tree-collapse-btn" title="收起层级视图">◀</button></div>
+              <div class="tree-node expanded" data-tree="perception-domain">
+                <button class="tree-toggle">▾ 感知域 <em>Domain 0</em></button>
+                <div class="tree-children">
+                  <div class="tree-node expanded" data-tree="camera-dds">
+                    <button class="tree-toggle">▾ 前视摄像头 <small>6 Topic</small></button>
+                    <div class="tree-children">
+                      <button class="tree-leaf active" data-tree-leaf="Topic_ObjectList">📡 Topic_ObjectList</button>
+                      <button class="tree-leaf" data-tree-leaf="Topic_ImageMeta">📡 Topic_ImageMeta</button>
+                    </div>
+                  </div>
+                  <div class="tree-node" data-tree="lidar-dds">
+                    <button class="tree-toggle">▸ 激光雷达 <small>4 Topic</small></button>
+                    <div class="tree-children hidden"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tree-node" data-tree="planning-domain">
+                <button class="tree-toggle">▸ 规划域 <em>Domain 1</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+            </aside>
+            <section class="excel-region">
+              <div class="breadcrumb" id="ddsBreadcrumb">DDS / 感知域 / 前视摄像头 / 域</div>
+              <div class="excel-table-wrap" id="ddsDomainTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>域名称</th><th>域 ID</th><th>节点数</th><th>Topic 数</th><th>Participant</th><th>传输协议</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="感知域" data-desc="负责环境感知数据的实时发布与订阅"><td class="row-no">1</td><td><strong>感知域</strong></td><td class="cell-mono">0</td><td>4</td><td>16</td><td>PerceptionParticipant</td><td>SHMEM + UDP</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="规划域" data-desc="负责路径规划与决策数据交互"><td class="row-no">2</td><td><strong>规划域</strong></td><td class="cell-mono">1</td><td>3</td><td>8</td><td>PlanningParticipant</td><td>UDP</td><td><span class="risk-tag warn">警告</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="ddsNodeTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>节点名称</th><th>所属域</th><th>Participant</th><th>发布 Topic</th><th>订阅 Topic</th><th>QoS Profile</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="前视摄像头" data-desc="发布图像元数据与目标检测结果"><td class="row-no">1</td><td><strong>前视摄像头</strong></td><td>感知域</td><td>CameraParticipant</td><td>6</td><td>1</td><td>SensorDefault</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="激光雷达" data-desc="发布点云与障碍物列表"><td class="row-no">2</td><td><strong>激光雷达</strong></td><td>感知域</td><td>LidarParticipant</td><td>4</td><td>0</td><td>SensorDefault</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="ADAS_DCU" data-desc="订阅传感器数据，发布融合目标"><td class="row-no">3</td><td><strong>ADAS_DCU</strong></td><td>感知域</td><td>ADASParticipant</td><td>3</td><td>10</td><td>FastReliable</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="ddsTopicTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>Topic 名称</th><th>域</th><th>数据类型</th><th>发布节点</th><th>订阅节点</th><th>发布频率</th><th>可靠性</th><th>Durability</th><th>校验</th></tr></thead><tbody>
+                  <tr class="selected" data-title="Topic_ObjectList" data-desc="目标对象列表，包含目标 ID、类型、位置、速度等信息"><td class="row-no">1</td><td contenteditable="true">Topic_ObjectList</td><td>感知域</td><td>ObjectList.idl</td><td>前视摄像头</td><td>ADAS_DCU</td><td>30Hz</td><td>BestEffort</td><td>Volatile</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Topic_PointCloud" data-desc="激光雷达点云数据"><td class="row-no">2</td><td contenteditable="true">Topic_PointCloud</td><td>感知域</td><td>PointCloud.idl</td><td>激光雷达</td><td>ADAS_DCU</td><td>10Hz</td><td>BestEffort</td><td>Volatile</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Topic_ImageMeta" data-desc="图像元数据，含时间戳、曝光参数等"><td class="row-no">3</td><td contenteditable="true">Topic_ImageMeta</td><td>感知域</td><td>ImageMeta.idl</td><td>前视摄像头</td><td>ADAS_DCU</td><td>30Hz</td><td>BestEffort</td><td>TransientLocal</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Topic_FusionTarget" data-desc="融合目标列表，ADAS_DCU 发布"><td class="row-no">4</td><td contenteditable="true">Topic_FusionTarget</td><td>感知域</td><td>FusionTarget.idl</td><td>ADAS_DCU</td><td>座舱 ECU</td><td>20Hz</td><td>Reliable</td><td>TransientLocal</td><td><span class="risk-tag error">错误</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="ddsQosTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>QoS Profile</th><th>可靠性</th><th>Durability</th><th>History</th><th>Deadline</th><th>LatencyBudget</th><th>Partition</th><th>使用数</th></tr></thead><tbody>
+                  <tr data-title="SensorDefault" data-desc="传感器默认 QoS，BestEffort + Volatile"><td class="row-no">1</td><td><strong>SensorDefault</strong></td><td>BestEffort</td><td>Volatile</td><td>KeepLast(3)</td><td>50ms</td><td>5ms</td><td>perception</td><td>10</td></tr>
+                  <tr data-title="FastReliable" data-desc="可靠快速传输模板"><td class="row-no">2</td><td><strong>FastReliable</strong></td><td>Reliable</td><td>TransientLocal</td><td>KeepLast(10)</td><td>100ms</td><td>10ms</td><td>planning</td><td>6</td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="ddsPubsubTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>Topic</th><th>发布者</th><th>订阅者</th><th>QoS Profile</th><th>数据流向</th><th>带宽占用</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Topic_ObjectList: Camera→ADAS" data-desc="前视摄像头到 ADAS_DCU 的目标数据流"><td class="row-no">1</td><td><strong>Topic_ObjectList</strong></td><td>前视摄像头</td><td>ADAS_DCU</td><td>SensorDefault</td><td>→ 单向</td><td>320Mbps</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Topic_PointCloud: Lidar→ADAS" data-desc="激光雷达到 ADAS_DCU 的点云数据流"><td class="row-no">2</td><td><strong>Topic_PointCloud</strong></td><td>激光雷达</td><td>ADAS_DCU</td><td>SensorDefault</td><td>→ 单向</td><td>680Mbps</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Topic_FusionTarget: ADAS→座舱" data-desc="ADAS_DCU 到座舱 ECU 的融合目标流"><td class="row-no">3</td><td><strong>Topic_FusionTarget</strong></td><td>ADAS_DCU</td><td>座舱 ECU</td><td>FastReliable</td><td>→ 单向</td><td>24Mbps</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="protocol-footer" id="ddsFooter"><span>共 34 条 · 已筛选 18 条 · 已选择 1 条</span><span>错误 1 · 警告 1 · 已自动保存 · V1.3 评审分支</span></div>
+            </section>
+            <aside class="protocol-props">
+              <div class="props-current-type"><span>当前选中</span><span class="props-tag" id="ddsPropsTag">域</span></div>
+              <h3 id="ddsPropTitle">感知域</h3>
+              <p id="ddsPropDesc">负责环境感知数据的实时发布与订阅</p>
+              <div class="prop-list">
+                <div><span>域 ID</span><strong id="ddsPropId">0</strong></div>
+                <div><span>节点数</span><strong id="ddsPropNodes">4</strong></div>
+                <div><span>Topic 数</span><strong id="ddsPropTopics">16</strong></div>
+                <div><span>Participant</span><strong id="ddsPropParticipant">PerceptionParticipant</strong></div>
+                <div><span>传输协议</span><strong id="ddsPropTransport">SHMEM + UDP</strong></div>
+                <div><span>校验结果</span><strong id="ddsPropCheck" class="status-ok">通过</strong></div>
+              </div>
+              <div class="prop-actions">
+                <button>查看 Topic</button><button>版本追溯</button>
+                <button class="ai-suggest" data-ai-prompt="分析感知域 DDS Topic 的数据流向是否合理">AI 建议</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="protocol-view view-pane" id="someipView">
+          <div class="protocol-status">
+            <div><span>协议模块</span><strong>SOME/IP</strong></div>
+            <div><span>对象总数</span><strong>51</strong></div>
+            <div><span>完成度</span><strong>88%</strong></div>
+            <div><span>服务数</span><strong>13</strong></div>
+            <div><span>校验问题</span><strong class="risk-count">2</strong></div>
+          </div>
+          <div class="protocol-tabs">
+            <button class="active" data-protocol="someip" data-object-tab="someip-services">服务</button>
+            <button data-protocol="someip" data-object-tab="someip-methods">方法</button>
+            <button data-protocol="someip" data-object-tab="someip-events">事件</button>
+            <button data-protocol="someip" data-object-tab="someip-fields">字段</button>
+            <button data-protocol="someip" data-object-tab="someip-ecunodes">ECU节点</button>
+            <button data-protocol="someip" data-object-tab="someip-instances">服务实例</button>
+          </div>
+          <div class="protocol-toolbar">
+            <div class="tool-actions">
+              <button>新增</button><button>删除</button><button>批量修改</button>
+              <button>导入</button><button>导出</button><button>IDL 生成</button>
+              <button>服务模板</button><button>调用关系</button><button>AI 建议</button>
+            </div>
+            <div class="protocol-filters">
+              <select><option>全部服务</option><option>BatteryHealth</option><option>VehicleStatus</option></select>
+              <select><option>全部 ECU</option><option>座舱 ECU</option><option>TBOX</option></select>
+              <select><option>全部状态</option><option>有错误</option><option>已修改</option></select>
+              <input placeholder="搜索服务 / 方法 / 事件" />
+            </div>
+          </div>
+          <div class="protocol-layout">
+            <aside class="object-tree">
+              <div class="tree-title"><span>📂 层级视图</span><button class="tree-collapse-btn" title="收起层级视图">◀</button></div>
+              <div class="tree-node expanded" data-tree="battery-health-svc">
+                <button class="tree-toggle">▾ BatteryHealth <em>Service 0x1001</em></button>
+                <div class="tree-children">
+                  <button class="tree-leaf active" data-tree-leaf="Method_GetBatteryHealth">🔧 Method_GetBatteryHealth</button>
+                  <button class="tree-leaf" data-tree-leaf="Method_GetCellTemps">🔧 Method_GetCellTemps</button>
+                  <button class="tree-leaf" data-tree-leaf="Event_BatteryAlarm">📢 Event_BatteryAlarm</button>
+                  <button class="tree-leaf" data-tree-leaf="Field_SOC">📋 Field_SOC</button>
+                </div>
+              </div>
+              <div class="tree-node" data-tree="vehicle-status-svc">
+                <button class="tree-toggle">▸ VehicleStatus <em>Service 0x1002</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+              <div class="tree-node" data-tree="diagnostic-svc">
+                <button class="tree-toggle">▸ Diagnostic <em>Service 0x2001</em></button>
+                <div class="tree-children hidden"></div>
+              </div>
+            </aside>
+            <section class="excel-region">
+              <div class="breadcrumb" id="someipBreadcrumb">SOME/IP / BatteryHealth / 服务</div>
+              <div class="excel-table-wrap" id="someipServiceTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>服务名称</th><th>服务 ID</th><th>提供者</th><th>消费者</th><th>方法数</th><th>事件数</th><th>字段数</th><th>版本</th><th>校验</th></tr></thead><tbody>
+                  <tr class="selected" data-title="BatteryHealth" data-desc="电池健康管理服务，提供 SOC/SOH 查询及告警事件"><td class="row-no">1</td><td><strong>BatteryHealth</strong></td><td class="cell-mono">0x1001</td><td>BMS</td><td>座舱 ECU, TBOX</td><td>3</td><td>2</td><td>4</td><td>v1.2</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="VehicleStatus" data-desc="车辆状态服务，提供车速、里程、档位等信息"><td class="row-no">2</td><td><strong>VehicleStatus</strong></td><td class="cell-mono">0x1002</td><td>中央网关 ZCU</td><td>座舱 ECU, TBOX</td><td>2</td><td>3</td><td>6</td><td>v1.3</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Diagnostic" data-desc="诊断服务，提供 DTC 读取、清除及 DID 访问"><td class="row-no">3</td><td><strong>Diagnostic</strong></td><td class="cell-mono">0x2001</td><td>中央网关 ZCU</td><td>TBOX, 座舱 ECU</td><td>5</td><td>1</td><td>2</td><td>v1.2</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="someipMethodTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>方法名称</th><th>方法 ID</th><th>所属服务</th><th>请求参数</th><th>响应参数</th><th>调用方式</th><th>超时</th><th>校验</th></tr></thead><tbody>
+                  <tr class="selected" data-title="Method_GetBatteryHealth" data-desc="获取电池健康状态信息"><td class="row-no">1</td><td contenteditable="true">Method_GetBatteryHealth</td><td class="cell-mono">0x8001</td><td>BatteryHealth</td><td>无</td><td>BatteryStatus struct</td><td>Request/Response</td><td>500ms</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Method_GetCellTemps" data-desc="获取单体温度列表"><td class="row-no">2</td><td contenteditable="true">Method_GetCellTemps</td><td class="cell-mono">0x8002</td><td>BatteryHealth</td><td>cell_count uint8</td><td>CellTemp[] array</td><td>Request/Response</td><td>1000ms</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="Method_GetVehicleSpeed" data-desc="获取车辆当前速度"><td class="row-no">3</td><td contenteditable="true">Method_GetVehicleSpeed</td><td class="cell-mono">0x8010</td><td>VehicleStatus</td><td>无</td><td>speed float32</td><td>Request/Response</td><td>200ms</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="someipEventTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>事件名称</th><th>事件 ID</th><th>所属服务</th><th>事件组</th><th>触发条件</th><th>通知周期</th><th>数据载荷</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Event_BatteryAlarm" data-desc="电池异常告警事件"><td class="row-no">1</td><td contenteditable="true">Event_BatteryAlarm</td><td class="cell-mono">0x9001</td><td>BatteryHealth</td><td>BatteryAlarmGroup</td><td>阈值触发</td><td>—</td><td>AlarmInfo struct</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Event_SpeedChanged" data-desc="车速变化通知"><td class="row-no">2</td><td contenteditable="true">Event_SpeedChanged</td><td class="cell-mono">0x9010</td><td>VehicleStatus</td><td>SpeedGroup</td><td>变化 > 5km/h</td><td>100ms</td><td>speed float32</td><td><span class="risk-tag error">错误</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="someipFieldTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>字段名称</th><th>字段 ID</th><th>所属服务</th><th>Getter</th><th>Setter</th><th>Notifier</th><th>数据类型</th><th>初始值</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="Field_SOC" data-desc="电池荷电状态字段"><td class="row-no">1</td><td contenteditable="true">Field_SOC</td><td class="cell-mono">0xA001</td><td>BatteryHealth</td><td>✓</td><td>✗</td><td>✓</td><td>uint8</td><td>0</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Field_SOH" data-desc="电池健康度字段"><td class="row-no">2</td><td contenteditable="true">Field_SOH</td><td class="cell-mono">0xA002</td><td>BatteryHealth</td><td>✓</td><td>✗</td><td>✓</td><td>uint8</td><td>100</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="Field_Odometer" data-desc="总里程字段"><td class="row-no">3</td><td contenteditable="true">Field_Odometer</td><td class="cell-mono">0xA010</td><td>VehicleStatus</td><td>✓</td><td>✗</td><td>✓</td><td>uint32</td><td>0</td><td><span class="risk-tag warn">警告</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="someipEcuTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>ECU 名称</th><th>提供服务</th><th>消费服务</th><th>方法调用</th><th>事件订阅</th><th>版本</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="BMS" data-desc="提供 BatteryHealth 服务"><td class="row-no">1</td><td><strong>BMS</strong></td><td>BatteryHealth</td><td>—</td><td>—</td><td>2</td><td>v1.2</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="座舱 ECU" data-desc="消费 BatteryHealth、VehicleStatus"><td class="row-no">2</td><td><strong>座舱 ECU</strong></td><td>—</td><td>BatteryHealth, VehicleStatus</td><td>5</td><td>5</td><td>v1.3</td><td><span class="risk-tag warn">警告</span></td></tr>
+                  <tr data-title="TBOX" data-desc="消费 BatteryHealth、Diagnostic"><td class="row-no">3</td><td><strong>TBOX</strong></td><td>—</td><td>BatteryHealth, Diagnostic</td><td>5</td><td>3</td><td>v1.2</td><td><span class="risk-tag ok">通过</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="excel-table-wrap hidden" id="someipInstanceTable">
+                <table class="excel-table"><thead><tr><th class="row-no">#</th><th>实例名称</th><th>服务</th><th>提供者 ECU</th><th>消费者 ECU</th><th>传输协议</th><th>端口</th><th>实例 ID</th><th>校验</th></tr></thead><tbody>
+                  <tr data-title="BatteryHealth_Inst1" data-desc="BMS 提供的 BatteryHealth 服务实例"><td class="row-no">1</td><td><strong>BatteryHealth_Inst1</strong></td><td>BatteryHealth</td><td>BMS</td><td>座舱 ECU, TBOX</td><td>UDP</td><td>30501</td><td class="cell-mono">0x0001</td><td><span class="risk-tag ok">通过</span></td></tr>
+                  <tr data-title="VehicleStatus_Inst1" data-desc="中央网关提供的 VehicleStatus 服务实例"><td class="row-no">2</td><td><strong>VehicleStatus_Inst1</strong></td><td>VehicleStatus</td><td>中央网关 ZCU</td><td>座舱 ECU, TBOX</td><td>TCP</td><td>30502</td><td class="cell-mono">0x0001</td><td><span class="risk-tag error">错误</span></td></tr>
+                </tbody></table>
+              </div>
+              <div class="protocol-footer" id="someipFooter"><span>共 51 条 · 已筛选 24 条 · 已选择 1 条</span><span>错误 1 · 警告 1 · 已自动保存 · V1.3 评审分支</span></div>
+            </section>
+            <aside class="protocol-props">
+              <div class="props-current-type"><span>当前选中</span><span class="props-tag" id="someipPropsTag">服务</span></div>
+              <h3 id="someipPropTitle">BatteryHealth</h3>
+              <p id="someipPropDesc">电池健康管理服务，提供 SOC/SOH 查询及告警事件</p>
+              <div class="prop-list">
+                <div><span>服务 ID</span><strong id="someipPropId">0x1001</strong></div>
+                <div><span>提供者</span><strong id="someipPropProvider">BMS</strong></div>
+                <div><span>消费者</span><strong id="someipPropConsumer">座舱 ECU, TBOX</strong></div>
+                <div><span>方法数</span><strong id="someipPropMethods">3</strong></div>
+                <div><span>事件数</span><strong id="someipPropEvents">2</strong></div>
+                <div><span>校验结果</span><strong id="someipPropCheck" class="status-ok">通过</strong></div>
+              </div>
+              <div class="prop-actions">
+                <button>查看方法</button><button>版本追溯</button>
+                <button class="ai-suggest" data-ai-prompt="分析 BatteryHealth 服务契约是否完整">AI 建议</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="analytics-view view-pane" id="analyticsView">
+          <div class="analytics-topbar">
+            <div class="analytics-title-row">
+              <div>
+                <span>统计分析</span>
+                <h2>协议通信全景分析</h2>
+              </div>
+              <div class="analytics-global-actions">
+                <label>时间范围
+                  <select id="analyticsTimeRange"><option>最近 24 小时</option><option>最近 7 天</option><option>最近 30 天</option><option>自定义</option></select>
+                </label>
+                <label>速率
+                  <select><option>实时</option><option>1 分钟</option><option>5 分钟</option></select>
+                </label>
+                <button class="analytics-action-btn" id="analyticsRefresh">⟳ 刷新</button>
+                <button class="analytics-action-btn" id="analyticsExport">⤓ 导出报表</button>
+                <button class="analytics-action-btn" id="analyticsSaveView">★ 保存视图</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-kpi-row">
+            <div class="analytics-kpi-card" data-kpi="completeness">
+              <div class="kpi-icon completion">◎</div>
+              <div>
+                <span>通信矩阵完成度</span>
+                <strong>87% <small class="trend up">↑2%</small></strong>
+                <div class="kpi-bar"><i style="width:87%"></i></div>
+              </div>
+            </div>
+            <div class="analytics-kpi-card" data-kpi="passrate">
+              <div class="kpi-icon pass">◉</div>
+              <div>
+                <span>校验通过率</span>
+                <strong>419 / 428 <small class="trend up">97.9%</small></strong>
+                <div class="kpi-bar"><i style="width:97.9%"></i></div>
+              </div>
+            </div>
+            <div class="analytics-kpi-card" data-kpi="busload">
+              <div class="kpi-icon load">◈</div>
+              <div>
+                <span>总线负载峰值</span>
+                <strong>73% <small class="trend warn">ADAS-CANFD</small></strong>
+                <div class="kpi-bar"><i style="width:73%" class="warn-bar"></i></div>
+              </div>
+            </div>
+            <div class="analytics-kpi-card" data-kpi="alerts">
+              <div class="kpi-icon alert">◍</div>
+              <div>
+                <span>活跃告警</span>
+                <strong>17 <small class="trend risk">5错误 8警告 4风险</small></strong>
+                <div class="kpi-alert-tags">
+                  <span class="alert-err">5 错误</span><span class="alert-warn">8 警告</span><span class="alert-risk">4 风险</span>
+                </div>
+              </div>
+            </div>
+            <div class="analytics-kpi-card" data-kpi="changes">
+              <div class="kpi-icon change">◒</div>
+              <div>
+                <span>最近变更</span>
+                <strong>2 分钟前 <small>6 文件变更</small></strong>
+                <div class="kpi-change-detail">
+                  <span>王工 · Body-CAN 信号周期修改</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="analytics-main">
+            <div class="analytics-content">
+              <div class="analytics-tabs">
+                <button class="active" data-analytics-tab="can">CAN/CAN FD</button>
+                <button data-analytics-tab="lin">LIN</button>
+                <button data-analytics-tab="dds">DDS</button>
+                <button data-analytics-tab="someip">SOME/IP</button>
+              </div>
+
+              <div class="analytics-filters">
+                <select class="analytics-filter-select"><option>全部网段</option><option>ADAS-CANFD</option><option>Body-CAN</option><option>Power-CAN</option></select>
+                <select class="analytics-filter-select"><option>全部 ECU</option><option>ADAS_DCU</option><option>BMS</option><option>BCM</option><option>EPS</option></select>
+                <select class="analytics-filter-select"><option>全部状态</option><option>正常</option><option>警告</option><option>错误</option></select>
+                <input class="analytics-filter-input" placeholder="搜索指标 / ECU / 报文..." />
+              </div>
+
+              <div class="analytics-chart-area">
+
+                <div class="analytics-chart-panel can-charts" id="analyticsCanCharts">
+                  <div class="chart-grid">
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>总线负载趋势</h3><span>近 24h · 5 分钟粒度</span><div class="chart-legend"><i class="dot can"></i>ADAS-CANFD <i class="dot canfd"></i>Body-CAN <i class="dot lin"></i>Power-CAN <b class="threshold-label">— 阈值 65%</b></div></div>
+                      <div class="chart-body" id="canLoadTrend">
+                        <svg viewBox="0 0 640 160" class="trend-svg">
+                          <polyline class="trend-line line-adascanfd" points="10,100 55,95 100,92 145,103 190,110 235,105 280,115 325,120 370,118 415,125 460,130 505,128 550,133 595,135 630,138" />
+                          <polyline class="trend-line line-bodycan" points="10,50 55,48 100,52 145,47 190,55 235,53 280,58 325,55 370,60 415,58 460,62 505,60 550,63 595,61 630,64" />
+                          <polyline class="trend-line line-powercan" points="10,80 55,82 100,78 145,85 190,80 235,88 280,85 325,90 370,88 415,92 460,90 505,93 550,91 595,94 630,95" />
+                          <line class="trend-threshold" x1="0" y1="112" x2="640" y2="112" />
+                        </svg>
+                        <div class="trend-axis"><span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>现在</span></div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>报文成功率</h3><span>按网段分组</span></div>
+                      <div class="chart-body" id="canSuccessRate">
+                        <div class="h-bar-list">
+                          <div class="h-bar-item"><label>ADAS-CANFD</label><div class="h-bar-track"><i style="width:98.2%"><b>98.2%</b></i><em style="left:98.2%">126/128</em></div></div>
+                          <div class="h-bar-item"><label>Body-CAN</label><div class="h-bar-track"><i style="width:96.8%"><b>96.8%</b></i><em style="left:96.8%">88/91</em></div></div>
+                          <div class="h-bar-item"><label>Power-CAN</label><div class="h-bar-track"><i style="width:99.1%"><b>99.1%</b></i><em style="left:99.1%">108/109</em></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>负载贡献排名 Top10</h3></div>
+                      <div class="chart-body" id="canLoadTop10">
+                        <div class="h-bar-list compact">
+                          <div class="h-bar-item"><label>Msg_ADAS_ObjList</label><div class="h-bar-track"><i style="width:100%"><b>18.4%</b></i></div></div>
+                          <div class="h-bar-item"><label>Msg_ADAS_Ctrl</label><div class="h-bar-track"><i style="width:77%"><b>14.2%</b></i></div></div>
+                          <div class="h-bar-item"><label>Msg_ADAS_Target</label><div class="h-bar-track"><i style="width:68%"><b>12.6%</b></i></div></div>
+                          <div class="h-bar-item"><label>Msg_EPS_Angle</label><div class="h-bar-track"><i style="width:44%"><b>8.1%</b></i></div></div>
+                          <div class="h-bar-item"><label>Msg_BMS_Temp</label><div class="h-bar-track"><i style="width:32%"><b>5.8%</b></i></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>周期漂移分布</h3><span>实际 vs 设计周期</span></div>
+                      <div class="chart-body" id="canCycleDrift">
+                        <div class="scatter-sim">
+                          <div class="scatter-dot" style="left:12%;top:22%"></div><div class="scatter-dot" style="left:25%;top:35%"></div><div class="scatter-dot" style="left:38%;top:18%"></div><div class="scatter-dot" style="left:52%;top:42%"></div><div class="scatter-dot" style="left:65%;top:28%"></div><div class="scatter-dot" style="left:78%;top:15%"></div><div class="scatter-dot warn" style="left:31%;top:72%"></div><div class="scatter-dot" style="left:42%;top:55%"></div><div class="scatter-dot" style="left:56%;top:48%"></div><div class="scatter-dot" style="left:70%;top:38%"></div><div class="scatter-dot warn" style="left:22%;top:80%"></div><div class="scatter-dot" style="left:88%;top:32%"></div>
+                          <span class="scatter-axis-x">设计周期 →</span><span class="scatter-axis-y">实际周期 ↑</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="analytics-chart-panel lin-charts hidden" id="analyticsLinCharts">
+                  <div class="chart-grid">
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>帧传输成功率</h3><span>按集群 · 近 24h</span></div>
+                      <div class="chart-body" id="linSuccessRate">
+                        <div class="h-bar-list">
+                          <div class="h-bar-item"><label>Body-LIN</label><div class="h-bar-track"><i style="width:98.8%"><b>98.8%</b></i><em style="left:98.8%">无条件帧 98.2% · 事件帧 100%</em></div></div>
+                          <div class="h-bar-item"><label>Door-LIN</label><div class="h-bar-track"><i style="width:95.4%"><b>95.4%</b></i><em style="left:95.4%">无条件帧 96.1% · 事件帧 92.0%</em></div></div>
+                          <div class="h-bar-item"><label>Lamp-LIN</label><div class="h-bar-track"><i style="width:99.5%"><b>99.5%</b></i><em style="left:99.5%">无条件帧 99.6% · 偶发帧 98.0%</em></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>调度表时序</h3><span>Body-LIN · 一周期 50ms</span></div>
+                      <div class="chart-body" id="linScheduleGantt">
+                        <div class="gantt-sim">
+                          <div class="gantt-row"><label>Status</label><div class="gantt-bar" style="left:0%;width:8%"></div></div>
+                          <div class="gantt-row"><label>Lamp</label><div class="gantt-bar" style="left:10%;width:7%"></div></div>
+                          <div class="gantt-row"><label>Window</label><div class="gantt-bar" style="left:19%;width:6%"></div></div>
+                          <div class="gantt-row"><label>Lock</label><div class="gantt-bar" style="left:27%;width:5%"></div></div>
+                          <div class="gantt-row"><label>Diag</label><div class="gantt-bar" style="left:34%;width:9%"></div></div>
+                          <div class="gantt-row"><label>Status</label><div class="gantt-bar" style="left:50%;width:8%"></div></div>
+                          <div class="gantt-row"><label>Lamp</label><div class="gantt-bar" style="left:60%;width:7%"></div></div>
+                          <div class="gantt-row"><label>Mirror</label><div class="gantt-bar" style="left:69%;width:6%"></div></div>
+                          <div class="gantt-row risk"><label>Lock</label><div class="gantt-bar" style="left:77%;width:10%" title="超时风险"></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>从节点响应延迟</h3><span>P50 / P95 / P99</span></div>
+                      <div class="chart-body" id="linNodeDelay">
+                        <div class="boxplot-sim">
+                          <div class="boxplot-item"><label>门控 ECU</label><div class="boxplot"><i class="p50" style="left:28%"></i><i class="p95" style="left:55%"></i><i class="p99" style="left:72%"></i><span>3.2ms</span></div></div>
+                          <div class="boxplot-item"><label>灯控 ECU</label><div class="boxplot"><i class="p50" style="left:22%"></i><i class="p95" style="left:42%"></i><i class="p99" style="left:58%"></i><span>2.8ms</span></div></div>
+                          <div class="boxplot-item"><label>座椅 ECU</label><div class="boxplot"><i class="p50" style="left:35%"></i><i class="p95" style="left:68%"></i><i class="p99" style="left:88%"></i><span>4.1ms</span></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>校验错误分布</h3><span>近 7 天</span></div>
+                      <div class="chart-body" id="linErrorDist">
+                        <div class="donut-sim">
+                          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="40" fill="none" stroke="#f0f2f5" stroke-width="18"/><circle cx="60" cy="60" r="40" fill="none" stroke="#16a34a" stroke-width="18" stroke-dasharray="226" stroke-dashoffset="25"/><circle cx="60" cy="60" r="40" fill="none" stroke="#d97706" stroke-width="18" stroke-dasharray="20" stroke-dashoffset="205"/><circle cx="60" cy="60" r="40" fill="none" stroke="#dc2626" stroke-width="18" stroke-dasharray="8" stroke-dashoffset="197"/></svg>
+                          <div class="donut-legend"><span><i style="background:#16a34a"></i>Checksum 92%</span><span><i style="background:#d97706"></i>Parity 6%</span><span><i style="background:#dc2626"></i>No Response 2%</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="analytics-chart-panel dds-charts hidden" id="analyticsDdsCharts">
+                  <div class="chart-grid">
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>Topic 匹配成功率</h3><span>按域分组</span></div>
+                      <div class="chart-body" id="ddsTopicMatch">
+                        <div class="h-bar-list">
+                          <div class="h-bar-item"><label>感知域</label><div class="h-bar-track"><i style="width:94.5%"><b>94.5%</b></i><em style="left:94.5%">16/17 Topic · 1 QoS不兼容</em></div></div>
+                          <div class="h-bar-item"><label>规划域</label><div class="h-bar-track"><i style="width:100%"><b>100%</b></i><em style="left:100%">8/8 Topic</em></div></div>
+                          <div class="h-bar-item"><label>控制域</label><div class="h-bar-track"><i style="width:90.0%"><b>90.0%</b></i><em style="left:90.0%">9/10 Topic · 1 数据类型不匹配</em></div></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>数据流向拓扑</h3><span>感知域 · 节点发布-订阅关系</span></div>
+                      <div class="chart-body" id="ddsFlowTopo">
+                        <div class="flow-topo-sim">
+                          <div class="topo-node publisher">前视摄像头</div>
+                          <div class="topo-edge e1"></div>
+                          <div class="topo-node publisher">激光雷达</div>
+                          <div class="topo-edge e2"></div>
+                          <div class="topo-node subscriber">ADAS_DCU</div>
+                          <div class="topo-edge e3"></div>
+                          <div class="topo-node subscriber">座舱 ECU</div>
+                          <div class="topo-edge e4 risk-edge"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>QoS 兼容性矩阵</h3></div>
+                      <div class="chart-body" id="ddsQosMatrix">
+                        <table class="qos-matrix">
+                          <tr><td></td><td class="pub-col">📤 前视摄像头</td><td class="pub-col">📤 激光雷达</td><td class="pub-col">📤 ADAS_DCU</td></tr>
+                          <tr><td class="sub-row">📥 ADAS_DCU</td><td class="match">✓</td><td class="match">✓</td><td>—</td></tr>
+                          <tr><td class="sub-row">📥 座舱 ECU</td><td class="mismatch">Reliability</td><td class="mismatch">Durability</td><td class="match">✓</td></tr>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>带宽使用趋势</h3><span>Top 4 Topic</span></div>
+                      <div class="chart-body" id="ddsBandwidth">
+                        <div class="area-sim">
+                          <svg viewBox="0 0 300 100" class="area-stack-svg">
+                            <polygon class="area-stack a1" points="0,80 50,75 100,82 150,78 200,88 250,85 300,90 300,100 0,100"/>
+                            <polygon class="area-stack a2" points="0,55 50,52 100,58 150,50 200,62 250,55 300,65 300,90 250,85 200,88 150,78 100,82 50,75 0,80"/>
+                            <polygon class="area-stack a3" points="0,30 50,28 100,32 150,25 200,38 250,30 300,40 300,65 250,55 200,62 150,50 100,58 50,52 0,55"/>
+                            <line class="area-limit" x1="0" y1="15" x2="300" y2="15"/>
+                            <text x="305" y="18" class="area-limit-label">1Gbps</text>
+                          </svg>
+                          <div class="area-legend"><span><i style="background:#3b82f6"></i>PointCloud 680M</span><span><i style="background:#8b5cf6"></i>ObjectList 320M</span><span><i style="background:#06b6d4"></i>FusionTarget 24M</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="analytics-chart-panel someip-charts hidden" id="analyticsSomeipCharts">
+                  <div class="chart-grid">
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>服务调用成功率</h3><span>按服务 · 近 24h</span></div>
+                      <div class="chart-body" id="someipCallSuccess">
+                        <div class="stacked-bar-sim">
+                          <div class="stacked-item"><label>BatteryHealth</label><div class="stacked-track"><i class="ok" style="width:92%"></i><i class="fail" style="width:5%"></i><i class="timeout" style="width:3%"></i><b>92%</b></div><small>成功 1,840 · 失败 100 · 超时 60</small></div>
+                          <div class="stacked-item"><label>VehicleStatus</label><div class="stacked-track"><i class="ok" style="width:88%"></i><i class="fail" style="width:7%"></i><i class="timeout" style="width:5%"></i><b>88%</b></div><small>成功 1,056 · 失败 84 · 超时 60</small></div>
+                          <div class="stacked-item"><label>Diagnostic</label><div class="stacked-track"><i class="ok" style="width:96%"></i><i class="fail" style="width:2%"></i><i class="timeout" style="width:2%"></i><b>96%</b></div><small>成功 1,920 · 失败 40 · 超时 40</small></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>方法调用链追踪</h3><span>BatteryHealth · GetBatteryHealth</span></div>
+                      <div class="chart-body" id="someipCallChain">
+                        <div class="swimlane-sim">
+                          <div class="swim-row"><label class="swim-label">座舱 ECU</label><div class="swim-event req" style="left:5%"></div><div class="swim-event resp" style="left:42%"></div></div>
+                          <div class="swim-row"><label class="swim-label">BMS</label><div class="swim-event recv" style="left:8%"></div><div class="swim-event proc" style="left:15%"></div><div class="swim-event send" style="left:38%"></div></div>
+                          <div class="swim-timeline"><span>0ms</span><span>100ms</span><span>200ms</span><span>300ms</span><span>400ms</span><span>500ms</span></div>
+                          <div class="swim-metrics"><small>网络延迟: 8ms · 处理时间: 120ms · 总往返: 185ms → <b class="status-ok">达标</b></small></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card chart-wide">
+                      <div class="chart-header"><h3>服务依赖关系</h3><span>线宽=调用频次 · 虚线=异常链路</span></div>
+                      <div class="chart-body" id="someipDepGraph">
+                        <div class="dep-graph-sim">
+                          <div class="dep-node provider">BMS</div><div class="dep-edge" style="width:4px"></div>
+                          <div class="dep-node provider">中央网关 ZCU</div><div class="dep-edge" style="width:3px"></div>
+                          <div class="dep-node consumer">座舱 ECU</div>
+                          <div class="dep-edge dep-edge-down" style="width:2px;border-style:dashed"></div><div class="dep-node consumer">TBOX</div>
+                          <div class="dep-labels">
+                            <div class="dep-label" style="top:8px;left:260px">BatteryHealth<br><small>1,840calls · 92%</small></div>
+                            <div class="dep-label" style="top:55px;left:260px">VehicleStatus<br><small>1,056calls · 88%</small></div>
+                            <div class="dep-label" style="top:102px;left:260px">Diagnostic<br><small class="risk">960calls · 72% ⚠</small></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="chart-card">
+                      <div class="chart-header"><h3>事件丢失分析</h3><span>通知 vs 接收 · 近 24h</span></div>
+                      <div class="chart-body" id="someipEventLoss">
+                        <div class="event-loss-sim">
+                          <div class="loss-item"><label>BatteryAlarm</label><div class="loss-cmp"><span>发送 <strong>480</strong></span><span class="loss-arr">→</span><span>接收 <strong>474</strong></span><b class="loss-rate warn">丢失率 1.25%</b></div></div>
+                          <div class="loss-item"><label>SpeedChanged</label><div class="loss-cmp"><span>发送 <strong>14,400</strong></span><span class="loss-arr">→</span><span>接收 <strong>13,968</strong></span><b class="loss-rate risk">丢失率 3.0%</b></div></div>
+                          <div class="loss-item"><label>BatteryHealth_Changed</label><div class="loss-cmp"><span>发送 <strong>960</strong></span><span class="loss-arr">→</span><span>接收 <strong>958</strong></span><b class="loss-rate ok">丢失率 0.2%</b></div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="analytics-detail-section">
+                <div class="detail-toggle-bar">
+                  <h3>明细数据</h3>
+                  <button class="detail-toggle-btn" id="analyticsDetailToggle">收起 ▲</button>
+                </div>
+                <div class="analytics-detail-table-wrap" id="analyticsDetailTable">
+                  <table class="excel-table">
+                    <thead><tr><th class="row-no">#</th><th>时间</th><th>指标名称</th><th>所属对象</th><th>当前值</th><th>阈值</th><th>状态</th><th>操作</th></tr></thead>
+                    <tbody id="analyticsDetailBody">
+                      <tr><td class="row-no">1</td><td>15:42:18</td><td>总线负载</td><td>ADAS-CANFD / Msg_ADAS_ObjList</td><td>73%</td><td>65%</td><td><span class="risk-tag warn">超阈值</span></td><td><button class="ai-suggest" data-ai-prompt="分析 ADAS-CANFD 总线负载超阈值原因">AI 归因</button></td></tr>
+                      <tr><td class="row-no">2</td><td>15:40:05</td><td>Topic 匹配</td><td>感知域 / Topic_FusionTarget</td><td>不匹配</td><td>Reliability</td><td><span class="risk-tag error">QoS不兼容</span></td><td><button class="ai-suggest" data-ai-prompt="分析 Topic_FusionTarget QoS 不兼容原因">AI 归因</button></td></tr>
+                      <tr><td class="row-no">3</td><td>15:38:52</td><td>事件丢失</td><td>SOME/IP / SpeedChanged</td><td>3.0%</td><td>1%</td><td><span class="risk-tag error">超阈值</span></td><td><button class="ai-suggest" data-ai-prompt="分析 SpeedChanged 事件丢失率 3% 原因">AI 归因</button></td></tr>
+                      <tr><td class="row-no">4</td><td>15:35:11</td><td>帧成功率</td><td>LIN / Door-LIN</td><td>95.4%</td><td>97%</td><td><span class="risk-tag warn">低于阈值</span></td><td><button class="ai-suggest" data-ai-prompt="分析 Door-LIN 帧成功率偏低原因">AI 归因</button></td></tr>
+                      <tr><td class="row-no">5</td><td>15:30:00</td><td>服务调用</td><td>SOME/IP / BatteryHealth</td><td>92%</td><td>95%</td><td><span class="risk-tag warn">低于阈值</span></td><td><button class="ai-suggest" data-ai-prompt="分析 BatteryHealth 服务调用成功率偏低原因">AI 归因</button></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <aside class="analytics-ai-panel" id="analyticsAiPanel">
+              <div class="analytics-ai-head">
+                <strong>🤖 AI 分析</strong>
+                <button id="analyticsAiCollapse" title="收起AI面板">◀</button>
+              </div>
+              <div class="analytics-ai-summary">
+                <span>当前上下文</span>
+                <p id="analyticsAiContext">CAN/CAN FD · 近 24 小时 · ADAS-CANFD 负载偏高</p>
+              </div>
+              <div class="analytics-ai-insight">
+                <div class="insight-item risk">
+                  <strong>⚠ 负载超阈值</strong>
+                  <p>ADAS-CANFD 当前 73%，超出评审阈值 65%。主要贡献：Msg_ADAS_ObjList(18.4%)、Msg_ADAS_Ctrl(14.2%)。</p>
+                </div>
+                <div class="insight-item warn">
+                  <strong>⚡ 周期变更影响</strong>
+                  <p>Msg_ADAS_ObjList 周期由 20ms→10ms，导致网段负载增长约 6.2%。建议评估是否可恢复为 20ms 或迁移部分信号至其他网段。</p>
+                </div>
+                <div class="insight-item ok">
+                  <strong>✓ Power-CAN 正常</strong>
+                  <p>Power-CAN 负载 58%，在安全范围。近期无高风险变更。</p>
+                </div>
+              </div>
+              <div class="analytics-ai-actions">
+                <button class="ai-suggest" data-ai-prompt="为 ADAS-CANFD 负载超阈值生成详细归因报告">📝 生成归因报告</button>
+                <button class="ai-suggest" data-ai-prompt="针对当前告警给出具体优化建议">💡 优化建议</button>
+                <button class="ai-suggest" data-ai-prompt="检查本次变更关联的所有协议风险">🔗 关联风险排查</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="content-grid view-pane" id="topologyView">
+          <section class="topology-panel">
+            <div class="toolbar">
+              <div class="tool-actions">
+                <button>从矩阵生成</button>
+                <button>新增 ECU</button>
+                <button>新增链路</button>
+                <button>风险扫描</button>
+                <button class="layout-action" id="autoLayoutBtn">自动整理</button>
+                <button class="layout-action" id="resetLayoutBtn">重置布局</button>
+              </div>
+              <div class="legend">
+                <span><i class="can"></i>CAN</span>
+                <span><i class="canfd"></i>CAN FD</span>
+                <span><i class="lin"></i>LIN</span>
+                <span><i class="dds"></i>DDS</span>
+                <span><i class="someip"></i>SOME/IP</span>
+              </div>
+            </div>
+
+            <div class="topology-stage">
+              <div class="canvas-kpis" aria-label="拓扑统计">
+                <div><strong>42</strong><span>ECU/节点</span></div>
+                <div><strong>5</strong><span>协议链路</span></div>
+                <div><strong>73%</strong><span>最高总线负载</span></div>
+                <div><strong>17</strong><span>校验问题</span></div>
+              </div>
+              <svg class="topology-svg" viewBox="0 0 1120 660" role="img" aria-label="整车通信拓扑图">
+                <defs>
+                  <filter id="softGlow" x="-35%" y="-35%" width="170%" height="170%">
+                    <feGaussianBlur stdDeviation="5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <g class="link-layer">
+                  <path class="link canfd pulse delay-1" data-from="zcu" data-to="adas" />
+                  <path class="link canfd pulse delay-2" data-from="zcu" data-to="body" />
+                  <path class="link someip pulse" data-from="zcu" data-to="camera" />
+                  <path class="link dds pulse delay-3" data-from="zcu" data-to="lidar" />
+                  <path class="link can pulse delay-2" data-from="adas" data-to="power" />
+                  <path class="link lin pulse delay-1" data-from="body" data-to="cockpit" />
+                  <path class="link someip pulse delay-3" data-from="adas" data-to="body" />
+                  <path class="link dds pulse delay-1" data-from="power" data-to="cockpit" />
+                  <path class="link can pulse delay-1" data-from="power" data-to="bms" />
+                  <path class="link can pulse delay-3" data-from="power" data-to="brake" />
+                  <path class="link canfd pulse delay-2" data-from="adas" data-to="steer" />
+                  <path class="link someip pulse delay-1" data-from="zcu" data-to="tbox" />
+                  <path class="link lin pulse delay-2" data-from="body" data-to="door" />
+                  <path class="link lin pulse delay-3" data-from="body" data-to="lamp" />
+                </g>
+
+                <g class="bus-labels">
+                  <text x="352" y="216" data-link-label="zcu-adas">CAN FD ADAS-BUS · 68%</text>
+                  <text x="719" y="216" data-link-label="zcu-body">CAN FD BODY-BUS · 41%</text>
+                  <text x="590" y="165" data-link-label="zcu-camera">SOME/IP Backbone · 1.8Gbps</text>
+                  <text x="584" y="552" data-link-label="zcu-lidar">DDS Sensor Mesh · 23 Topics</text>
+                </g>
+
+                <g class="node domain selected" data-node="zcu" data-x="492" data-y="286" data-w="142" data-h="76" transform="translate(492 286)">
+                  <rect width="142" height="76" />
+                  <line class="node-port" x1="0" y1="20" x2="142" y2="20" />
+                  <text x="71" y="38" text-anchor="middle">中央网关 ZCU</text>
+                  <text class="node-sub" x="71" y="58" text-anchor="middle">SOME/IP · DDS · CAN FD</text>
+                  <circle cx="128" cy="14" r="4" />
+                </g>
+
+                <g class="node domain" data-node="adas" data-x="126" data-y="178" data-w="148" data-h="78" transform="translate(126 178)">
+                  <rect width="148" height="78" />
+                  <line class="node-port" x1="0" y1="20" x2="148" y2="20" />
+                  <text x="74" y="39" text-anchor="middle">ADAS 域控制器</text>
+                  <text class="node-sub" x="74" y="59" text-anchor="middle">12 报文 · 8 Topic</text>
+                  <circle class="warn-dot" cx="134" cy="14" r="5" />
+                </g>
+
+                <g class="node domain" data-node="body" data-x="852" data-y="178" data-w="148" data-h="78" transform="translate(852 178)">
+                  <rect width="148" height="78" />
+                  <line class="node-port" x1="0" y1="20" x2="148" y2="20" />
+                  <text x="74" y="39" text-anchor="middle">车身域控制器</text>
+                  <text class="node-sub" x="74" y="59" text-anchor="middle">36 信号 · 5 服务</text>
+                </g>
+
+                <g class="node ecu" data-node="power" data-x="128" data-y="472" data-w="146" data-h="72" transform="translate(128 472)">
+                  <rect width="146" height="72" />
+                  <line class="node-port" x1="0" y1="20" x2="146" y2="20" />
+                  <text x="73" y="38" text-anchor="middle">动力 ECU</text>
+                  <text class="node-sub" x="73" y="57" text-anchor="middle">CAN · 扭矩/热管理</text>
+                </g>
+
+                <g class="node ecu" data-node="cockpit" data-x="852" data-y="472" data-w="146" data-h="72" transform="translate(852 472)">
+                  <rect width="146" height="72" />
+                  <line class="node-port" x1="0" y1="20" x2="146" y2="20" />
+                  <text x="73" y="38" text-anchor="middle">座舱 ECU</text>
+                  <text class="node-sub" x="73" y="57" text-anchor="middle">SOME/IP · 诊断服务</text>
+                  <circle class="risk-dot" cx="132" cy="14" r="5" />
+                </g>
+
+                <g class="node sensor" data-node="camera" data-x="494" data-y="48" data-w="138" data-h="68" transform="translate(494 48)">
+                  <rect width="138" height="68" />
+                  <line class="node-port" x1="0" y1="20" x2="138" y2="20" />
+                  <text x="69" y="37" text-anchor="middle">前视摄像头</text>
+                  <text class="node-sub" x="69" y="55" text-anchor="middle">DDS Topic: 6</text>
+                </g>
+
+                <g class="node sensor" data-node="lidar" data-x="494" data-y="548" data-w="138" data-h="68" transform="translate(494 548)">
+                  <rect width="138" height="68" />
+                  <line class="node-port" x1="0" y1="20" x2="138" y2="20" />
+                  <text x="69" y="37" text-anchor="middle">激光雷达</text>
+                  <text class="node-sub" x="69" y="55" text-anchor="middle">DDS · 点云回传</text>
+                </g>
+
+                <g class="node ecu" data-node="bms" data-x="342" data-y="448" data-w="136" data-h="66" transform="translate(342 448)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">BMS</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">CAN · 电池状态</text>
+                </g>
+
+                <g class="node ecu" data-node="brake" data-x="340" data-y="536" data-w="136" data-h="66" transform="translate(340 536)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">制动 ECU</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">CAN · ABS/ESP</text>
+                </g>
+
+                <g class="node ecu" data-node="steer" data-x="338" data-y="142" data-w="136" data-h="66" transform="translate(338 142)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">转向 ECU</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">CAN FD · EPS</text>
+                </g>
+
+                <g class="node ecu" data-node="tbox" data-x="698" data-y="92" data-w="136" data-h="66" transform="translate(698 92)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">TBOX</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">SOME/IP · 远程服务</text>
+                </g>
+
+                <g class="node ecu" data-node="door" data-x="696" data-y="292" data-w="136" data-h="66" transform="translate(696 292)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">门控 ECU</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">LIN · 门锁/车窗</text>
+                </g>
+
+                <g class="node ecu" data-node="lamp" data-x="696" data-y="382" data-w="136" data-h="66" transform="translate(696 382)">
+                  <rect width="136" height="66" />
+                  <line class="node-port" x1="0" y1="19" x2="136" y2="19" />
+                  <text x="68" y="36" text-anchor="middle">灯控 ECU</text>
+                  <text class="node-sub" x="68" y="53" text-anchor="middle">LIN · 灯光矩阵</text>
+                </g>
+              </svg>
+            </div>
+          </section>
+
+          <aside class="detail-panel">
+            <div class="detail-card primary">
+              <span>当前选中</span>
+              <h3 id="detailTitle">中央网关 ZCU</h3>
+              <p id="detailDesc">跨域路由与协议转换核心，承载 SOME/IP 服务注册、DDS Topic 转发、CAN FD 网段桥接。</p>
+            </div>
+            <div class="detail-card">
+              <h3>关联数据</h3>
+              <div class="data-list" id="dataList">
+                <div><span>CAN FD 报文</span><strong>128</strong></div>
+                <div><span>SOME/IP 服务</span><strong>18</strong></div>
+                <div><span>DDS Topic</span><strong>23</strong></div>
+                <div><span>校验问题</span><strong class="risk">4</strong></div>
+              </div>
+            </div>
+            <div class="detail-card">
+              <h3>自动化作业</h3>
+              <div class="job done"><span>矩阵同步</span><strong>已完成</strong></div>
+              <div class="job running"><span>拓扑风险扫描</span><strong>运行中</strong></div>
+              <div class="job pending"><span>V1.2/V1.3 差异摘要</span><strong>待执行</strong></div>
+            </div>
+            <div class="detail-card">
+              <h3>近期审计</h3>
+              <p class="audit">王工修改 Body-CAN 网段信号周期，触发 2 条负载警告。</p>
+              <p class="audit">李工合并 SOME/IP 服务契约，新增 Method: BatteryHealth。</p>
+            </div>
+          </aside>
         </section>
       </main>
+
+      <aside class="ai-panel" id="aiPanel" aria-label="AI 助手">
+        <div class="ai-head">
+          <div>
+            <strong>AI 助手</strong>
+            <span id="aiContext">上下文：整车拓扑 / 中央网关 ZCU</span>
+          </div>
+          <div>
+            <button id="pinAi">固定</button>
+            <button id="expandAi">放大</button>
+            <button id="closeAi">关闭</button>
+          </div>
+        </div>
+        <div class="chat-flow" id="chatFlow">
+          <div class="ai-welcome">
+            <h2>有什么我能帮你的吗？</h2>
+            <div class="suggestion-row">
+              <button>解释当前 CAN 网段负载为什么偏高</button>
+              <button>分析这个服务变更影响哪些 ECU</button>
+              <button>总结 V1.2 到 V1.3 的主要通信变更</button>
+              <button>生成本次通信评审摘要</button>
+              <button>检查当前拓扑是否存在跨域路由风险</button>
+              <button>给出 SOME/IP 服务契约修改建议</button>
+              <button>定位 DDS Topic 延迟异常的可能原因</button>
+              <button>整理本版本待关闭的校验问题</button>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="发消息..." />
+          <div class="chat-tools">
+            <button class="tool-icon" id="quoteBtn" title="引用当前对象">+</button>
+            <span class="tool-divider"></span>
+            <button class="quick-chip">⚡ 快速</button>
+            <div class="more-menu">
+              <button class="quick-chip" id="moreActionsBtn">▦ 更多</button>
+              <div class="quick-actions" id="quickActions">
+                <button>解释当前问题</button>
+                <button>分析影响范围</button>
+                <button>生成修改建议</button>
+                <button>总结版本差异</button>
+                <button>分析拓扑风险</button>
+                <button>生成评审摘要</button>
+                <button>检查发布风险</button>
+              </div>
+            </div>
+            <button class="voice-btn" title="语音输入">◉</button>
+            <button id="sendBtn">发送</button>
+          </div>
+        </div>
+      </aside>
     </div>
-  </div>
-  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><h3 id="modalTitle">详情</h3><button class="btn small" onclick="hideModal()">关闭</button></div><div class="modal-body" id="modalBody"></div></div></div>
-  <div class="toast" id="toast"></div>
 
-  <script>
-    const roles = {
-      comm:{title:'通信工程师',avatar:'通',user:'张工｜通信工程师',desc:'处理接口影响确认、Service / Signal 变更、通信 Issue 与软件协同请求。',nav:[['我的工作','workbench','我的工作台','⌂',12],['专业确认','confirmation','接口影响确认','✓',5],['工程对象','object','Service / Signal','◇',9],['工程对象','impact','变更影响结果','↯',3],['工程对象','function','Function 主线','⛓',2],['问题闭环','issue','通信 Issue','!',4],['评审准备','gate','Gate 通信阻断','◈',2],['治理追溯','agent','Agent Run','◎',5]]},
-      arch:{title:'架构师',avatar:'架',user:'李工｜架构师',desc:'维护 Function 数字主线，确认需求到功能关系、断链、Agent 推荐关系和专业协同。',nav:[['我的工作','workbench','我的工作台','⌂',9],['架构工程','function','Function 全链路','⛓',6],['架构工程','impact','影响分析结果','↯',4],['工程对象','object','对象库切片','◇',12],['专业确认','confirmation','架构确认任务','✓',3],['问题闭环','issue','架构 Issue','!',3],['评审准备','gate','Gate 架构项','◈',4],['治理追溯','agent','Agent Run','◎',5]]},
-      pm:{title:'项目经理',avatar:'项',user:'王工｜项目经理',desc:'关注项目风险、Gate 阻断、跨专业确认进度、超期问题和评审准备。',nav:[['我的工作','workbench','我的工作台','⌂',18],['项目管理','gate','Gate Readiness','◈',7],['项目管理','impact','高风险变更','↯',4],['协同推进','confirmation','专业确认进度','✓',12],['问题闭环','issue','阻断 Issue','!',7],['工程对象','object','项目对象视图','◇',25],['治理追溯','agent','Agent Run / 审计','◎',5]]},
-      test:{title:'测试负责人',avatar:'测',user:'赵工｜测试负责人',desc:'确认变更回归范围、测试覆盖缺口、待复测 Issue 和测试结果证据。',nav:[['我的工作','workbench','我的工作台','⌂',15],['专业确认','confirmation','测试影响确认','✓',7],['测试工作','impact','回归范围','↯',6],['工程对象','function','Function 覆盖','⛓',4],['工程对象','object','Test Case / Result','◇',18],['问题闭环','issue','待复测 Issue','!',5],['评审准备','gate','Gate 测试阻断','◈',3]]},
-      data:{title:'数据管理员',avatar:'数',user:'陈工｜数据管理员',desc:'负责导入任务、字段映射、候选对象、冲突处理和导入质量。',nav:[['我的工作','workbench','我的工作台','⌂',10],['数据治理','import','数据导入工作台','⇪',3],['数据治理','confirmation','候选对象确认','✓',17],['工程对象','object','对象候选 / 正式库','◇',42],['数据治理','agent','Import Agent Run','◎',4],['问题闭环','issue','数据质量 Issue','!',2]]}
-    };
-    let currentRole='comm'; let currentPage='workbench'; let activeTab='all'; let selectedTask='TASK-COM-021';
-    const pageMeta={workbench:['我的工作台','今天需要处理的确认任务、Issue、协同请求和 Gate 阻断。'],confirmation:['确认任务详情','主对象是 Confirmation Task：先由专业工程师确认，再决定是否转 Issue。'],impact:['变更影响分析','围绕 CR-004 展示影响对象、影响路径、证据链和专业确认任务。'],function:['Function 全链路追溯','围绕 FN-034 展开需求、接口、诊断、软件、测试、Issue 和 Gate。'],issue:['Issue 详情','围绕 ISS-011 管理整改、协同复核、关闭证据和 Gate 解除。'],gate:['Gate Readiness Board','阶段门条件、证据、阻断项、责任人、豁免与评审包准备。'],import:['数据导入工作台','主对象是 Import Job：文件、字段映射、候选对象、冲突和质量报告。'],agent:['Agent Run 详情','用于审计和评估：输入、读取对象、工具调用、输出、采纳反馈。'],object:['工程对象详情','围绕当前角色高频工程对象展示字段、关系、版本、证据和历史。']};
-
-    const tasks=[
-      {id:'TASK-COM-021',title:'通信确认｜SVC-021 接口字段变更',desc:'CR-004 新增失败原因返回，Agent 判断 SVC-021 需要新增 retryStatus / failReason。',status:'待确认',color:'amber',owner:'张工',due:'今天 18:00',source:'CR-004',gate:'阻断 Gate'},
-      {id:'TASK-COM-088',title:'通信确认｜SIG-088 接收方缺失',desc:'FN-034 链路诊断发现 Consumer 缺失，需通信组确认。',status:'待补证据',color:'amber',owner:'张工',due:'明天 12:00',source:'FN-034',gate:'高风险'},
-      {id:'TASK-SW-017',title:'软件协同｜SWC-017 承接确认',desc:'通信字段确认后，软件需确认接口 v2 承接计划。',status:'协同中',color:'blue',owner:'刘工',due:'5月12日',source:'SVC-021',gate:'阻断 Gate'},
-      {id:'TASK-TC-302',title:'测试确认｜TC-302 异常路径覆盖',desc:'连续 3 次失败保护状态缺少测试覆盖。',status:'阻断',color:'red',owner:'赵工',due:'已超期',source:'CR-004',gate:'阻断 Gate'}
-    ];
-    const issues=[
-      ['ISS-011','Service 接口字段未同步软件','软件','整改中','阻断 Gate','SWC-017 接口仍为 v1'],
-      ['ISS-013','异常路径测试覆盖不足','测试','待整改','阻断 Gate','连续失败/超时/失败原因返回未覆盖'],
-      ['ISS-014','保护状态安全复核未完成','安全','待复核','阻断 Gate','远程控制保护状态需安全复核'],
-      ['ISS-017','DTC 与测试用例断链','诊断','待补证据','高风险','DTC-141 未关联测试用例']
-    ];
-
-    function renderAll(){renderRole();renderNav();renderHead();renderPages();}
-    function renderRole(){const r=roles[currentRole];roleTitle.textContent=r.title;roleDesc.textContent=r.desc;userAvatar.textContent=r.avatar;userText.textContent=r.user;roleQuick.innerHTML=Object.entries(roles).map(([id,role])=>`<button class="btn small ${currentRole===id?'blue':''}" onclick="switchRole('${id}')">${role.title}</button>`).join('');}
-    function renderNav(){let html='',section='';for(const item of roles[currentRole].nav){if(item[0]!==section){section=item[0];html+=`<div class="nav-group-title">${section}</div>`;}html+=`<button class="nav-btn ${currentPage===item[1]?'active':''}" onclick="switchPage('${item[1]}')"><span class="left"><span class="nav-icon">${item[3]}</span>${item[2]}</span><span class="nav-count">${item[4]}</span></button>`;}navList.innerHTML=html;navHint.textContent='当前仅显示 '+roles[currentRole].title+' 高频工作域。';}
-    function renderHead(){const [title,sub]=pageMeta[currentPage];crumb.textContent=`${roles[currentRole].title} / ${title}`;pageTitle.textContent=title;pageSub.textContent=sub;const a={workbench:[['处理下一个任务','blue','switchPage("confirmation")'],['批量处理','','openModal("批量处理", batchActions())'],['导出我的任务','','toast("已生成个人任务清单")']],confirmation:[['确认受影响','blue','confirmAffected()'],['转 Issue','red','switchPage("issue")'],['要求补证据','','openEvidence("补充证据")']],impact:[['生成确认任务','blue','toast("已生成 5 个 Confirmation Task")'],['重新分析','','toast("Change Impact Agent 已重新执行")']],function:[['运行链路诊断','blue','toast("Trace Agent 已完成诊断")'],['创建确认任务','','switchPage("confirmation")']],issue:[['提交修复证据','blue','openFixModal()'],['请求复核','','toast("已请求通信与测试复核")'],['尝试关闭','','toast("证据不足，不能关闭")']],gate:[['重新预检查','blue','toast("Gate 预检查已重新执行")'],['生成整改看板','','toast("已生成整改看板")'],['生成评审包','','toast("当前只能生成内部整改版草稿")']],import:[['运行解析','blue','toast("导入解析完成，生成 2486 个候选对象")'],['进入候选确认','','switchPage("confirmation")']],agent:[['查看证据','blue','openEvidence("Agent Run")'],['记录采纳反馈','','toast("已记录采纳反馈")']],object:[['新建对象关系','blue','toast("已创建候选关系，等待确认")'],['查看版本','','openModal("版本历史", versionHistory())']] }[currentPage];pageActions.innerHTML=a.map(x=>`<button class="btn ${x[1]}" onclick='${x[2]}'>${x[0]}</button>`).join('');}
-    function renderPages(){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+currentPage).classList.add('active');document.getElementById('page-workbench').innerHTML=pageWorkbench();document.getElementById('page-confirmation').innerHTML=pageConfirmation();document.getElementById('page-impact').innerHTML=pageImpact();document.getElementById('page-function').innerHTML=pageFunction();document.getElementById('page-issue').innerHTML=pageIssue();document.getElementById('page-gate').innerHTML=pageGate();document.getElementById('page-import').innerHTML=pageImport();document.getElementById('page-agent').innerHTML=pageAgent();document.getElementById('page-object').innerHTML=pageObject();}
-    function switchRole(id){currentRole=id;currentPage='workbench';renderAll();toast('已切换演示视角：'+roles[id].title);} function switchPage(p){currentPage=p;renderAll();}
-
-    function pageWorkbench(){const roleCards={comm:[['待确认通信影响','5','SVC-021、SIG-088 等接口对象需要确认','amber'],['通信 Issue','4','2 个阻断 Gate，1 个等待软件复核','red'],['软件协同请求','3','SWC-017 接口实现状态待确认','blue'],['Gate 通信阻断','2','架构冻结 Gate 尚未满足通信条件','red']],arch:[['Function 断链','6','FN-034 等功能存在下游承接缺口','red'],['Agent 推荐关系','8','需求到 Function 推荐关系待确认','blue'],['架构确认任务','3','来自 CR-004 和 FN-034 健康检查','amber'],['架构 Issue','3','异常路径与接口承接问题','red']],pm:[['Gate 阻断项','7','通信、软件、测试、安全均有阻断','red'],['待确认专业','12','5 个专业尚未完成确认','amber'],['超期 Issue','3','影响架构冻结评审准备','red'],['高风险变更','4','CR-004 影响范围最大','blue']],test:[['测试影响确认','7','变更回归范围待确认','amber'],['覆盖缺口','6','异常路径和诊断测试不足','red'],['待复测 Issue','5','软件修复后需复测','red'],['推荐用例草稿','12','Agent 生成待采纳','blue']],data:[['导入任务','3','X01 架构资料包解析中','blue'],['字段映射待确认','17','通信矩阵存在字段冲突','amber'],['低置信度对象','34','需分发给专业确认','red'],['导入质量','88%','可入库对象 2164 个','green']]}[currentRole];return `<div class="grid grid-4">${roleCards.map(c=>metric(c)).join('')}</div><div class="split" style="margin-top:12px"><section class="card"><div class="card-head"><div><h3>我的优先处理队列</h3><p>按阻断影响、截止时间、依赖关系排序；支持筛选和批量处理。</p></div><span class="tag blue">个人工作流</span></div>${toolbar(['全部','待确认','阻断','超期'])}${tasks.map(t=>workItem(t.title,t.desc,t.status,t.color,'switchPage("confirmation")',t)).join('')}</section><aside class="card"><div class="card-head"><div><h3>本周工作负载</h3><p>让个体工程师看到自己的节奏，而不是只服务管理看板。</p></div></div>${loadPanel()}<div style="margin-top:12px"><h3>最近 Agent 建议</h3>${agentMini('Change Impact Agent','CR-004 影响 18 个对象，建议生成 5 个确认任务。')}${agentMini('Trace Agent','FN-034 存在 3 条断链，2 条 Agent 推荐关系。')}${agentMini('Gate Review Agent','当前 7 个阻断项，暂不具备提交评审条件。')}</div></aside></div>`;}
-
-    function pageConfirmation(){const selected=tasks.find(t=>t.id===selectedTask)||tasks[0];return `<div class="three-col"><section class="card"><div class="card-head"><div><h3>确认任务队列</h3><p>每个任务都能追溯来源、对象、证据、责任和流转。</p></div></div>${toolbar(['全部','我的','阻断','待补证据'])}${tasks.map(t=>workItem(t.title,t.desc,t.status,t.color,`selectedTask='${t.id}';renderAll()`,t)).join('')}</section><section class="card"><div class="card-head"><div><h3>${selected.title}</h3><p>主对象：Confirmation Task。工程师拥有确认、驳回、补证据、转 Issue 的专业决策权。</p></div><span class="tag ${selected.color}">${selected.status}</span></div>${flowTrack([['任务生成','done'],['查看证据','active'],['专业确认','active'],['必要时转 Issue',''],['关闭任务','']])}<div class="grid grid-2" style="margin-top:12px">${infoCard('为什么找我？','CR-004 新增失败原因返回，FN-034 依赖 RemoteControlService，Agent 判断通信接口字段可能变化。')}${infoCard('我需要确认什么？','SVC-021 是否需要新增 retryStatus / failReason；Provider / Consumer 是否需要同步。')}${infoCard('确认后的流转','不受影响则关闭任务；受影响但无需整改则记录意见；需要整改则转 Issue Candidate。')}${infoCard('对 Gate 的影响','未确认时阻断“接口影响必须完成专业确认”条件。')}</div><div class="comment-box" style="margin-top:12px"><h4>专业意见</h4><textarea placeholder="填写确认意见、前提条件或风险说明……">建议新增 retryStatus 字段，并同步 Consumer 侧错误码枚举；需要软件负责人确认 SWC-017 是否承接 v2。</textarea></div><div class="btn-row" style="margin-top:12px"><button class="btn blue" onclick="confirmAffected()">确认受影响</button><button class="btn" onclick="toast('已确认不受影响，任务关闭')">确认不受影响</button><button class="btn" onclick="openEvidence('补充证据')">要求补证据</button><button class="btn" onclick="toast('已转软件负责人确认')">转其他专业</button><button class="btn red" onclick="switchPage('issue')">转 Issue</button></div></section><aside class="card"><div class="card-head"><div><h3>证据链与历史</h3><p>避免工程师翻文档、追会议纪要。</p></div></div>${evidenceChain()}<div style="margin-top:12px">${historyBox()}</div></aside></div>`;}
-
-    function pageImpact(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>CR-004：远程控制启动失败反馈变更</h3><p>变更影响分析页必须完整展示：差异、路径、对象、确认任务、Issue 候选、Gate 影响。</p></div><span class="tag red">3 个阻断候选</span></div><div class="grid grid-2"><div class="card flat"><h4>旧需求</h4><p>远程控制启动失败时，系统返回失败状态。</p></div><div class="card flat"><h4>新需求</h4><p>失败时 3 秒内返回失败原因；连续 3 次失败后进入保护状态，并记录诊断事件。</p></div></div><div style="margin-top:12px">${flowTrack([['变更提交','done'],['Agent 分析','done'],['生成确认任务','active'],['专业确认','active'],['Issue 整改',''],['Gate 更新','']])}</div><div class="graph" style="margin-top:12px">${impactGraph()}</div><div class="grid grid-3" style="margin-top:12px">${taskCard('通信确认任务','SVC-021 字段变化待确认。','通信工程师','待确认','amber')}${taskCard('软件承接任务','SWC-017 接口版本未同步。','软件负责人','阻断','red')}${taskCard('测试覆盖任务','异常路径测试缺失。','测试负责人','阻断','red')}</div></section><aside>${agentBox('Change Impact Agent',[['解析需求差异','识别失败原因返回、保护状态、诊断事件。','done'],['定位 Function','命中 FN-034 远程控制启动。','done'],['展开影响路径','Interface / DTC / SWC / Test 均受影响。','done'],['生成确认任务','建议生成 5 个 Confirmation Task。','active']],[['生成确认任务','blue','toast("已生成 5 个专业确认任务")'],['查看证据','','openEvidence("CR-004")']])}<div class="card" style="margin-top:12px"><h3>专业确认进度</h3>${progressRow('通信',60,'amber')}${progressRow('软件',30,'red')}${progressRow('测试',20,'red')}${progressRow('诊断',70,'amber')}${progressRow('安全',10,'red')}</div></aside></div>`;}
-
-    function pageFunction(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>FN-034：远程控制启动</h3><p>Function 页是架构师的主工作区：全链路、断链、推荐关系、专业确认状态和 Gate 影响。</p></div><span class="tag amber">健康度 76%</span></div><div class="grid grid-4" style="margin-bottom:12px">${metric(['需求追溯','2','1 条推荐关系','amber'])}${metric(['接口缺口','1','Provider 待确认','red'])}${metric(['诊断断链','1','DTC → Test','amber'])}${metric(['测试覆盖','62%','异常路径缺失','red'])}</div><div class="toolbar"><select><option>显示全部链路</option><option>只看断链</option><option>只看 Agent 推荐</option></select><select><option>当前基线 BL-2026.04</option></select><button class="btn small" onclick="toast('已切换到只看阻断链路')">应用过滤</button></div><div class="graph">${functionGraph()}</div><div class="grid grid-2" style="margin-top:12px">${infoCard('断链处理建议','DTC-141 与测试用例缺少关系，建议生成诊断/测试确认任务。')}${infoCard('推荐关系','REQ-1041 可能关联 FN-034，需要架构师确认或驳回。')}</div></section><aside>${agentBox('Function Trace Agent',[['读取 Function','FN-034 来源 FDS 第 3.2 节。','done'],['展开数字主线','已展开需求、接口、诊断、软件、测试。','done'],['识别断链','DTC-141 到测试用例断链。','active'],['推荐关系','REQ-1041 建议关联 FN-034。','active']],[['确认推荐关系','blue','toast("已确认推荐关系")'],['创建确认任务','','switchPage("confirmation")']])}<div class="card" style="margin-top:12px"><h3>关联 Issue</h3>${issues.map(i=>miniIssue(i)).join('')}</div></aside></div>`;}
-
-    function pageIssue(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>ISS-011：Service 接口字段未同步软件</h3><p>Issue 详情页必须完整覆盖整改、协同复核、证据、评论、历史与 Gate 解除条件。</p></div><span class="tag red">阻断 Gate</span></div>${flowTrack([['候选确认','done'],['分诊定责','done'],['整改中','active'],['通信复核',''],['测试复测',''],['关闭解除','']])}<div class="grid grid-2" style="margin-top:12px">${taskCard('软件整改','提交 SWC-017 接口 v2 实现说明。','软件负责人','整改中','amber')}${taskCard('通信复核','确认 retryStatus / failReason 字段定义。','通信工程师','待确认','amber')}${taskCard('测试复测','执行接口回归测试并上传结果。','测试负责人','未开始','amber')}${taskCard('关闭证据','修复说明、接口复核、测试报告必须齐全。','质量负责人','缺失','red')}</div><div class="grid grid-2" style="margin-top:12px"><div class="card flat"><h3>关闭条件清单</h3>${checklist(['软件修复说明','通信复核意见','测试回归报告','质量关闭意见'],[true,false,false,false])}</div><div class="card flat"><h3>评论与协同</h3>${commentBox()}</div></div></section><aside class="card"><div class="card-head"><div><h3>关闭证据</h3><p>关闭 Issue 依赖证据，不是改状态。</p></div></div>${evidenceChain()}<div class="btn-row" style="margin-top:12px"><button class="btn blue" onclick="openFixModal()">提交修复证据</button><button class="btn" onclick="toast('证据不足，不能关闭')">尝试关闭</button></div></aside></div>`;}
-
-    function pageGate(){const items=[['需求覆盖','高优先级 Requirement 必须关联 Function','满足','green'],['Function 完整性','异常路径、触发/退出条件需完整','待补充','amber'],['通信承接','SVC-021 Provider / 字段变化未确认','阻断','red'],['软件承接','SWC-017 接口版本未同步','阻断','red'],['测试覆盖','连续失败异常路径未覆盖','阻断','red'],['安全复核','保护状态需安全工程师确认','阻断','red']];return `<div class="split"><section class="card"><div class="card-head"><div><h3>架构冻结 Gate Readiness</h3><p>完整 Gate 页面应包含条件、规则、责任、证据、豁免、评审包与人工结论。</p></div><span class="tag red">暂不具备提交条件</span></div><div class="grid grid-4" style="margin-bottom:12px">${metric(['准入评分','72','需整改','amber'])}${metric(['阻断项','7','必须关闭/豁免','red'])}${metric(['证据缺口','3','待补充','amber'])}${metric(['待确认专业','5','通信/软件/测试','amber'])}</div><div class="table-wrap"><table><thead><tr><th>Gate 条件</th><th>规则</th><th>状态</th><th>责任</th><th>证据</th><th>操作</th></tr></thead><tbody>${items.map(i=>`<tr><td>${i[0]}</td><td>${i[1]}</td><td><span class="tag ${i[3]}">${i[2]}</span></td><td>${i[3]==='green'?'架构':'项目经理'}</td><td>${i[3]==='green'?'齐全':'缺失/待确认'}</td><td><button class="btn small" onclick="switchPage('issue')">查看阻断</button> <button class="btn small" onclick="openEvidence('${i[0]}')">证据</button></td></tr>`).join('')}</tbody></table></div></section><aside>${agentBox('Gate Review Agent',[['执行检查项','19 条检查项执行完成。','done'],['识别阻断','7 个阻断项，5 个专业待确认。','done'],['检查证据链','3 个阻断项证据不完整。','block'],['生成评审包','当前只能生成整改版草稿。','active']],[['重新预检查','blue','toast("Gate 预检查已重新执行")'],['生成整改看板','','toast("已生成整改看板")']])}<div class="card" style="margin-top:12px"><h3>评审包清单</h3>${checklist(['Gate 条件清单','阻断 Issue 清单','关闭证据包','豁免记录','专业确认记录'],[true,true,false,false,true])}</div></aside></div>`;}
-
-    function pageImport(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>Import Job：X01 架构资料包</h3><p>数据导入页面补齐字段映射、候选对象、冲突处理和质量报告，避免只是上传 Demo。</p></div><span class="tag blue">解析中</span></div>${flowTrack([['创建任务','done'],['上传文件','done'],['字段映射','active'],['候选对象',''],['专业确认',''],['正式入库','']])}<div class="tabs"><button class="tab active">文件</button><button class="tab">字段映射</button><button class="tab">候选对象</button><button class="tab">冲突</button><button class="tab">质量报告</button></div><div class="table-wrap"><table><thead><tr><th>文件</th><th>类型</th><th>解析对象</th><th>冲突</th><th>状态</th><th>动作</th></tr></thead><tbody>${[['需求清单.xlsx','Requirement','328','0','已解析','查看'],['Function清单.xlsx','Function','86','2','已解析','查看'],['通信矩阵.xlsx','Interface','462','9','需映射','字段映射'],['DTC表.xlsx','Diagnostic','144','12','待确认','转专业'],['测试用例.xlsx','Test Case','604','4','已解析','查看']].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${statusTag(r[4])}</td><td><button class="btn small" onclick="toast('${r[5]}')">${r[5]}</button></td></tr>`).join('')}</tbody></table></div></section><aside>${agentBox('Import Agent',[['识别文件类型','需求、Function、通信、诊断、测试模板已识别。','done'],['推荐字段映射','通信矩阵存在 9 个字段需人工确认。','active'],['生成候选对象','候选对象不会直接进入正式库。',''],['分发专业确认','低置信度对象将转 Confirmation Task。','']],[['运行解析','blue','toast("导入解析完成")'],['查看 Agent Run','','switchPage("agent")']])}<div class="card" style="margin-top:12px"><h3>导入质量</h3>${progressRow('字段映射完整度',82,'amber')}${progressRow('对象可信度',88,'green')}${progressRow('关系完整度',61,'red')}</div></aside></div>`;}
-
-    function pageAgent(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>Agent Run：AR-20260509-004</h3><p>Agent Run 页面补齐输入、读取对象、工具调用、权限过滤、输出、采纳反馈和评测信息。</p></div><span class="tag cyan">可审计</span></div>${agentBox('Change Impact Agent Run',[['输入对象','CR-004 / REQ-1023 v1 → v2。','done'],['读取对象','读取 Requirement、Function、Interface、DTC、SWC、Test Case 共 18 个。','done'],['调用工具','关系追溯工具、规则执行工具、Issue 候选工具。','done'],['权限过滤','当前用户无越权对象；过滤 0 条。','done'],['输出结果','生成 5 个 Confirmation Task 和 3 个 Issue 候选。','active']],[['查看证据','blue','openEvidence("AR-004")'],['记录采纳反馈','','toast("已记录采纳反馈")']])}<div class="grid grid-2" style="margin-top:12px"><div class="card flat"><h3>工具调用</h3><p>traceGraph.search、ruleEngine.run、taskService.createDraft、issueService.createCandidate</p></div><div class="card flat"><h3>用户反馈</h3><p>5 个确认任务中 3 个被采纳，1 个被驳回，1 个待处理。</p></div></div></section><aside class="card"><h3>结构化输出</h3><pre style="white-space:pre-wrap;background:#f8fbff;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:12px;line-height:1.55;">{
-  "agent": "ChangeImpactAgent",
-  "input": "CR-004",
-  "affected_objects": 18,
-  "confirmation_tasks": 5,
-  "issue_candidates": 3,
-  "requires_human_confirmation": true,
-  "blocked_actions": ["modify_object", "close_issue", "approve_gate"]
-}</pre></aside></div>`;}
-
-    function pageObject(){return `<div class="split"><section class="card"><div class="card-head"><div><h3>SVC-021：RemoteControlService</h3><p>工程对象详情不只是字段展示，还要包含版本、关系、变更、证据、确认任务和 Issue。</p></div><span class="tag amber">待通信确认</span></div><div class="grid grid-3">${infoCard('对象类型','Service Interface')}${infoCard('当前版本','v2 Candidate / v1 Frozen')}${infoCard('责任专业','通信工程师：张工')}</div><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>字段</th><th>v1</th><th>v2 候选</th><th>状态</th></tr></thead><tbody><tr><td>retryStatus</td><td>-</td><td>enum: success/fail/timeout</td><td><span class="tag amber">待确认</span></td></tr><tr><td>failReason</td><td>-</td><td>uint8 errorCode</td><td><span class="tag amber">待确认</span></td></tr><tr><td>provider</td><td>BCM</td><td>BCM</td><td><span class="tag green">一致</span></td></tr><tr><td>consumer</td><td>CloudGW</td><td>CloudGW / SWC-017</td><td><span class="tag red">待同步</span></td></tr></tbody></table></div><div style="margin-top:12px" class="graph">${impactGraph()}</div></section><aside class="card"><h3>对象上下文</h3>${evidenceChain()}<div style="margin-top:12px">${historyBox()}</div></aside></div>`;}
-
-    function metric(c){return `<div class="card metric"><span class="label">${c[0]}</span><span class="value">${c[1]}</span><div class="foot"><span class="tag ${c[3]}">${c[2]}</span></div></div>`;}
-    function toolbar(filters){return `<div class="toolbar"><input placeholder="搜索任务 / 对象 / 责任人" /><select><option>当前基线</option><option>全部基线</option></select><select><option>按优先级排序</option><option>按截止时间排序</option></select>${filters.map(f=>`<button class="btn small" onclick="toast('已筛选：${f}')">${f}</button>`).join('')}</div>`;}
-    function workItem(title,desc,status,color,action,t){return `<div class="work-item" onclick='${action||''}'><div class="work-top"><h4 class="work-title">${title}</h4><span class="tag ${color}">${status}</span></div><p class="work-desc">${desc}</p><div class="work-meta"><span class="tag">责任：${t?.owner||'张工'}</span><span class="tag">截止：${t?.due||'今天'}</span><span class="tag blue">来源：${t?.source||'CR-004'}</span><span class="tag ${t?.gate?.includes('阻断')?'red':'amber'}">${t?.gate||'影响 Gate'}</span></div></div>`;}
-    function taskCard(title,desc,owner,status,color){return `<div class="card flat"><div class="card-head"><div><h4>${title}</h4><p>${desc}</p></div><span class="tag ${color}">${status}</span></div><div class="btn-row"><span class="tag">责任：${owner}</span><button class="btn small" onclick="openEvidence('${title}')">证据</button><button class="btn small" onclick="toast('已创建子任务')">子任务</button></div></div>`;}
-    function infoCard(t,d){return `<div class="card flat"><h4>${t}</h4><p>${d}</p></div>`;}
-    function progressRow(name,v,color){return `<div style="margin:12px 0"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${name}</span><b>${v}%</b></div><div style="height:8px;background:#e8eef7;border-radius:999px;margin-top:6px;overflow:hidden"><div style="width:${v}%;height:100%;background:var(--${color==='red'?'red':color==='green'?'green':'amber'});border-radius:999px"></div></div></div>`;}
-    function agentMini(title,desc){return `<div class="work-item" onclick="switchPage('agent')"><div class="work-top"><h4 class="work-title">${title}</h4><span class="tag cyan">建议</span></div><p class="work-desc">${desc}</p></div>`;}
-    function miniIssue(i){return `<div class="work-item" onclick="switchPage('issue')"><div class="work-top"><h4 class="work-title">${i[0]}｜${i[1]}</h4><span class="tag ${i[4].includes('阻断')?'red':'amber'}">${i[3]}</span></div><p class="work-desc">${i[5]}</p></div>`;}
-    function flowTrack(steps){return `<div class="flow-track">${steps.map((s,i)=>`<div class="step ${s[1]}"><span class="step-dot">${i+1}</span>${s[0]}</div>`).join('')}</div>`;}
-    function agentBox(kind,steps,actions){return `<div class="agent-box"><div class="agent-head"><div><h3>${kind}</h3><p>Agent 嵌入当前业务页面，提供证据整理、路径展开和建议动作，不替工程师下结论。</p></div><span class="tag cyan">可审计</span></div><div class="agent-body">${steps.map((s,i)=>`<div class="agent-step ${s[2]}"><div class="agent-dot">${i+1}</div><div><b>${s[0]}</b><span>${s[1]}</span></div><span class="tag ${s[2]==='done'?'green':s[2]==='block'?'red':'amber'}">${s[2]==='done'?'完成':s[2]==='block'?'阻断':'进行中'}</span></div>`).join('')}<div class="btn-row">${actions.map(a=>`<button class="btn small ${a[1]}" onclick='${a[2]}'>${a[0]}</button>`).join('')}</div></div></div>`;}
-    function evidenceChain(){return `<div class="evidence-list"><div class="evidence-card"><div class="ev-num">1</div><div><h4>需求差异</h4><p>REQ-1023 v2 新增“3 秒内返回失败原因”和“连续 3 次失败进入保护状态”。</p></div></div><div class="evidence-card"><div class="ev-num">2</div><div><h4>Function 关联</h4><p>FN-034 远程控制启动，来源 FDS.docx 第 3.2 节。</p></div></div><div class="evidence-card"><div class="ev-num">3</div><div><h4>接口差异</h4><p>SVC-021 需要新增 retryStatus / failReason，来源通信矩阵 Sheet2 Row31。</p></div></div><div class="evidence-card"><div class="ev-num">4</div><div><h4>软件未承接</h4><p>SWC-017 当前接口版本 v1，未包含新增字段。</p></div></div></div>`;}
-    function impactGraph(){const cols=[['Requirement',[['REQ-1023 v2','失败原因返回 + 保护状态','ai']]],['Function',[['FN-034','远程控制启动异常路径待确认','warn']]],['Interface',[['SVC-021','新增 retryStatus / failReason','bad'],['SIG-088','RemoteStartReq 已覆盖','ok']]],['Diagnostic',[['DTC-141','连续失败事件待确认','warn']]],['Software',[['SWC-017','接口仍为 v1，未承接新增字段','bad']]],['Test',[['TC-302','异常路径未覆盖','bad']]]];return `<div class="graph-grid">${cols.map(c=>`<div class="graph-col"><div class="graph-title">${c[0]}</div>${c[1].map(n=>`<div class="node ${n[2]}" onclick="openEvidence('${n[0]}')"><h5>${n[0]}</h5><p>${n[1]}</p></div>`).join('')}</div>`).join('')}</div>`;}
-    function functionGraph(){const cols=[['Requirement',[['REQ-1023','已确认关联','ok'],['REQ-1041','Agent 推荐，待确认','ai']]],['Function',[['FN-034','远程控制启动','warn'],['异常路径','缺少退出条件','warn']]],['System',[['ECU-BCM','车身域控制器','ok']]],['Interface',[['SVC-021','Provider 待同步','bad']]],['Diagnostic',[['DTC-141','与测试断链','warn']]],['Software/Test',[['SWC-017','接口版本滞后','bad'],['TC-302','异常路径缺失','bad']]]];return `<div class="graph-grid">${cols.map(c=>`<div class="graph-col"><div class="graph-title">${c[0]}</div>${c[1].map(n=>`<div class="node ${n[2]}" onclick="openEvidence('${n[0]}')"><h5>${n[0]}</h5><p>${n[1]}</p></div>`).join('')}</div>`).join('')}</div>`;}
-    function checklist(items,done){return items.map((x,i)=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 0;font-size:12px"><span>${x}</span><span class="tag ${done[i]?'green':'amber'}">${done[i]?'已完成':'待补充'}</span></div>`).join('');}
-    function commentBox(){return `<div class="comment-box"><div class="comment"><b>刘工｜软件</b><p>接口 v2 实现预计今天提交，需通信确认字段枚举。</p></div><div class="comment"><b>张工｜通信</b><p>retryStatus 枚举建议与诊断错误码保持一致。</p></div></div>`;}
-    function historyBox(){return `<div class="comment-box"><h4>历史类似确认</h4><div class="comment"><b>CR-002 远程空调控制</b><p>相同失败原因返回模式，通信确认后转软件承接。</p></div><div class="comment"><b>CR-003 门锁控制</b><p>安全复核要求补充保护状态退出条件。</p></div></div>`;}
-    function loadPanel(){return `<div class="grid grid-2"><div class="card flat"><h4>今日</h4><p>4 个确认任务，1 个阻断 Issue。</p></div><div class="card flat"><h4>本周</h4><p>12 个任务，预计 6 小时处理量。</p></div></div>${progressRow('任务完成率',58,'amber')}${progressRow('阻断解除率',28,'red')}`;}
-    function statusTag(s){const c=s.includes('已')?'green':s.includes('待')||s.includes('需')?'amber':s.includes('阻断')?'red':'blue';return `<span class="tag ${c}">${s}</span>`;}
-    function searchResult(){return `<div class="grid grid-2">${['REQ-1023 远程控制启动失败反馈','FN-034 远程控制启动','SVC-021 RemoteControlService','SWC-017 RemoteControlManager','ISS-011 Service 接口字段未同步','Gate-ARCH 架构冻结'].map(x=>`<div class="work-item"><h4 class="work-title">${x}</h4><p class="work-desc">匹配当前项目、车型、基线；已按权限过滤。</p></div>`).join('')}</div>`;}
-    function notificationCenter(){return `<div class="grid grid-2">${tasks.map(t=>workItem(t.title,t.desc,t.status,t.color,'hideModal();switchPage("confirmation")',t)).join('')}</div>`;}
-    function recentView(){return `<div class="grid grid-2">${['REQ-1023 需求详情','FN-034 Function 主线','SVC-021 接口详情','ISS-011 Issue 详情','Gate-ARCH 架构冻结','AR-004 Agent Run'].map(x=>`<div class="work-item"><h4 class="work-title">${x}</h4><p class="work-desc">最近访问对象，可直接回到上下文。</p></div>`).join('')}</div>`;}
-    function versionHistory(){return `<div class="table-wrap"><table><thead><tr><th>版本</th><th>时间</th><th>变更</th><th>操作者</th></tr></thead><tbody><tr><td>v2 candidate</td><td>2026-05-09</td><td>新增 retryStatus / failReason</td><td>Change Impact Agent</td></tr><tr><td>v1 frozen</td><td>2026-04-18</td><td>架构冻结前版本</td><td>张工</td></tr></tbody></table></div>`;}
-    function batchActions(){return `<div class="grid grid-2"><div class="card flat"><h3>批量确认不受影响</h3><p>仅适用于证据完整且低风险任务。</p><button class="btn blue" onclick="toast('已批量处理低风险任务');hideModal();">执行</button></div><div class="card flat"><h3>批量要求补证据</h3><p>对证据缺口任务统一退回。</p><button class="btn" onclick="toast('已批量要求补充证据');hideModal();">执行</button></div></div>`;}
-    function openRoleMenu(){openModal('演示视角切换',`<p style="margin-top:0;color:var(--muted);font-size:13px;line-height:1.6">真实产品里角色由账号权限决定，这里仅作为原型演示入口。</p><div class="grid grid-2">${Object.entries(roles).map(([id,r])=>`<div class="work-item" onclick="switchRole('${id}');hideModal();"><div class="work-top"><h4 class="work-title">${r.title}</h4><span class="tag blue">演示</span></div><p class="work-desc">${r.desc}</p></div>`).join('')}</div>`);}
-    function confirmAffected(){toast('已确认受影响：将生成 Issue 候选并通知软件负责人');}
-    function openEvidence(id){openModal('证据链｜'+id,evidenceChain()+`<div class="btn-row" style="margin-top:14px"><button class="btn blue" onclick="toast('已确认证据');hideModal();">确认证据</button><button class="btn" onclick="toast('已要求补充证据');hideModal();">要求补充</button></div>`);}
-    function openFixModal(){openModal('提交修复证据',`<div class="form"><label>修复说明<textarea>SWC-017 已升级至接口 v2，新增 retryStatus / failReason 字段。</textarea></label><label>复核人<select><option>通信工程师</option><option>测试负责人</option></select></label><label>附件/证据<input value="SWC-017_interface_v2_diff.xlsx" /></label><div class="btn-row"><button class="btn blue" onclick="toast('修复证据已提交，进入复核');hideModal();">提交</button></div></div>`);}
-    function openModal(title,html){modalTitle.textContent=title;modalBody.innerHTML=html;modalBackdrop.classList.add('show');}
-    function hideModal(){modalBackdrop.classList.remove('show');}
-    function closeModal(e){if(e.target.id==='modalBackdrop')hideModal();}
-    function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
-    renderAll();
-  </script>
-</body>
+    <script src="./app.js"></script>
+  </body>
 </html>
